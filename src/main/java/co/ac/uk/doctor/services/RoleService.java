@@ -1,0 +1,7 @@
+package co.ac.uk.doctor.services;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class RoleService {
+}

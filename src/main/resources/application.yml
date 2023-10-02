@@ -1,0 +1,17 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: "jdbc:mysql://localhost/doctor"
+    username: "dorian"
+    password: "dorian01"
+app:
+  jwt:
+    private.key: classpath:app.key
+    public.key: classpath:app.pub
+  secret: "dfdfdfdjfefehjfekjfdw3435"
+  issuer: "dorian"
+
+
