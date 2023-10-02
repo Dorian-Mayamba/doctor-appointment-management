@@ -8,9 +8,6 @@ spring:
     username: "dorian"
     password: "dorian01"
 app:
-  jwt:
-    private.key: classpath:app.key
-    public.key: classpath:app.pub
   secret: "dfdfdfdjfefehjfekjfdw3435"
   issuer: "dorian"
 
