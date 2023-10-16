@@ -16,7 +16,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
@@ -45,15 +44,15 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response){
         try{
+            LoginResponse res = authService.login(loginRequest.getUsername(), loginRequest.getPassword());
             UsernamePasswordAuthenticationToken token = UsernamePasswordAuthenticationToken.unauthenticated(
-                    loginRequest.getUsername(), loginRequest.getPassword()
+                    res.getCurrentUserName(), loginRequest.getPassword()
             );
             Authentication auth = authenticationManager.authenticate(token);
             SecurityContext context = strategy.createEmptyContext();
             context.setAuthentication(auth);
             strategy.setContext(context);
             securityContextRepository.saveContext(context,request,response);
-            LoginResponse res = authService.login(loginRequest.getUsername(), loginRequest.getPassword());
             Cookie cookie = new Cookie(ApplicationConstants.JWT_TOKEN, res.getAccessToken());
             cookie.setHttpOnly(true);
             response.addCookie(cookie);

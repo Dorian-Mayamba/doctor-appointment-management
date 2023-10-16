@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -26,10 +27,11 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    public User(String name, String email, String password){
+    public User(String name, String email, String password, Role role){
         this.name = name;
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 
     @Column(nullable = false)
@@ -40,6 +42,13 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private String password;
+
+    @OneToMany(mappedBy = "user")
+    private List<Appointment> appointments;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
 
     public void setPassword(String password) {
         this.password = password;
@@ -93,6 +102,10 @@ public class User implements UserDetails {
 
     public String getEmail() {
         return email;
+    }
+
+    public Role getRole() {
+        return role;
     }
 
     @Override

@@ -1,7 +1,7 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: "jdbc:mysql://localhost/doctor"
