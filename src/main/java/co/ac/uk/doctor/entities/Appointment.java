@@ -13,16 +13,22 @@ public class Appointment {
     private Long id;
 
     @Column(nullable = false)
-    private Date date;
+    private String date;
 
     @Column(nullable = false)
-    private Time time;
+    private String time;
+
+    @Column
+    private String patientName;
+
+    @Column
+    private String doctorName;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Appointment(Date date, Time time, User user){
+    public Appointment(String date, String time, User user){
         this.user = user;
         this.date = date;
         this.time = time;
@@ -36,15 +42,15 @@ public class Appointment {
         return user;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public Time getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -52,7 +58,11 @@ public class Appointment {
         this.id = id;
     }
 
-    public void setTime(Time time) {
+    public Long getId() {
+        return id;
+    }
+
+    public void setTime(String time) {
         this.time = time;
     }
 
@@ -60,4 +70,19 @@ public class Appointment {
         this.user = user;
     }
 
+    public void setDoctorName(String doctorName) {
+        this.doctorName = doctorName;
+    }
+
+    public void setPatientName(String patientName) {
+        this.patientName = patientName;
+    }
+
+    public String getDoctorName() {
+        return doctorName;
+    }
+
+    public String getPatientName() {
+        return patientName;
+    }
 }

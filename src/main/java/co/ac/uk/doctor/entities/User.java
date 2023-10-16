@@ -43,7 +43,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Appointment> appointments;
 
     @ManyToOne
@@ -106,6 +106,10 @@ public class User implements UserDetails {
 
     public Role getRole() {
         return role;
+    }
+
+    public void addAppointment(Appointment appointment){
+        this.appointments.add(appointment);
     }
 
     @Override
