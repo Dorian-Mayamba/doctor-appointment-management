@@ -11,6 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class HelloController {
     @GetMapping
     public String greet(Authentication authentication){
-        return authentication.getName();
+        return authentication != null ? authentication.getName() : "Hello world";
     }
 }

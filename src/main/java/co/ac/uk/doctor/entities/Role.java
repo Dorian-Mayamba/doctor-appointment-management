@@ -1,9 +1,9 @@
 package co.ac.uk.doctor.entities;
 
+
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,12 +16,16 @@ public class Role implements GrantedAuthority {
     private String type;
 
     @OneToMany(mappedBy = "role", fetch = FetchType.EAGER)
-    private List<User> users;
+    private List<Patient> patients;
 
+    @OneToMany(mappedBy = "role", fetch = FetchType.EAGER)
+    private List<Doctor> doctors;
+
+    @OneToMany(mappedBy = "role", fetch = FetchType.EAGER)
+    private List<Admin> admins;
     public void setId(Long id) {
         this.id = id;
     }
-
 
     public Long getId() {
         return id;
@@ -35,17 +39,20 @@ public class Role implements GrantedAuthority {
         return type;
     }
 
-    public Role addUser(User user){
-        this.users.add(user);
-        return this;
-    }
-
     public Role(String type){
         this.setAuthority(type);
     }
 
-    public List<User> getUsers() {
-        return users;
+    public List<Patient> getPatients() {
+        return patients;
+    }
+
+    public List<Admin> getAdmins() {
+        return admins;
+    }
+
+    public List<Doctor> getDoctors() {
+        return doctors;
     }
 
     public Role(){}

@@ -2,9 +2,6 @@ package co.ac.uk.doctor.entities;
 
 import jakarta.persistence.*;
 
-import java.sql.Date;
-import java.sql.Time;
-
 @Entity
 @Table(name = "appointments")
 public class Appointment {
@@ -18,28 +15,31 @@ public class Appointment {
     @Column(nullable = false)
     private String time;
 
-    @Column
-    private String patientName;
-
-    @Column
-    private String doctorName;
+    @ManyToOne
+    @JoinColumn(name = "patient_id")
+    private Patient patient;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "doctor_id")
+    private Doctor doctor;
 
-    public Appointment(String date, String time, User user){
-        this.user = user;
+    public Appointment(String date, String time, Patient patient, Doctor doctor){
+        this.patient = patient;
         this.date = date;
         this.time = time;
+        this.doctor = doctor;
     }
 
     public Appointment(){
 
     }
 
-    public User getUser() {
-        return user;
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public Doctor getDoctor() {
+        return doctor;
     }
 
     public String getDate() {
@@ -66,23 +66,8 @@ public class Appointment {
         this.time = time;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setPatient(Patient user) {
+        this.patient = user;
     }
 
-    public void setDoctorName(String doctorName) {
-        this.doctorName = doctorName;
-    }
-
-    public void setPatientName(String patientName) {
-        this.patientName = patientName;
-    }
-
-    public String getDoctorName() {
-        return doctorName;
-    }
-
-    public String getPatientName() {
-        return patientName;
-    }
 }

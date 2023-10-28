@@ -1,69 +1,193 @@
 package co.ac.uk.doctor.services;
 
+import co.ac.uk.doctor.entities.Admin;
+import co.ac.uk.doctor.entities.Doctor;
 import co.ac.uk.doctor.entities.Role;
-import co.ac.uk.doctor.entities.User;
+import co.ac.uk.doctor.entities.Patient;
+import co.ac.uk.doctor.exceptions.AlreadyRegisteredUserException;
+import co.ac.uk.doctor.generic.IUserDetails;
+import co.ac.uk.doctor.generic.IUserDetailsService;
 import co.ac.uk.doctor.requests.RegisterRequest;
 import co.ac.uk.doctor.responses.LoginResponse;
+import co.ac.uk.doctor.responses.RegisterResponse;
 import co.ac.uk.doctor.utils.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import co.ac.uk.doctor.constants.RoleConstants;
 
+import javax.print.Doc;
 import java.util.Optional;
 
 @Service
 public class AuthService {
-    private final UserService userService;
     private final JWTUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
 
-    private final UserDetailsService userDetailsService;
+    private final IUserDetailsService adminDetailsService;
 
+    private final IUserDetailsService patientDetailsService;
+
+    private final IUserDetailsService doctorDetailsService;
     private final RoleService roleService;
+
+    private final AuthenticationManager authenticationManager;
     @Autowired
-    public AuthService(UserService userService, JWTUtil jwtUtil, PasswordEncoder passwordEncoder, UserDetailsService userDetailsService, RoleService roleService){
-        this.userService = userService;
+    public AuthService(JWTUtil jwtUtil, PasswordEncoder passwordEncoder, @Qualifier("createAdminDetailsService") IUserDetailsService adminDetailsService,@Qualifier("createPatientDetailsService") IUserDetailsService patientDetailsService,
+                       @Qualifier("createDoctorDetailsService") IUserDetailsService doctorDetailsService, RoleService roleService, AuthenticationManager authenticationManager){
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
-        this.userDetailsService = userDetailsService;
+        this.adminDetailsService = adminDetailsService;
+        this.patientDetailsService = patientDetailsService;
+        this.doctorDetailsService = doctorDetailsService;
         this.roleService = roleService;
+        this.authenticationManager = authenticationManager;
     }
 
-    public LoginResponse login(String userName, String password) throws UsernameNotFoundException, BadCredentialsException {
-        try{
-            LoginResponse response = new LoginResponse();
-            User user = (User) this.userDetailsService.loadUserByUsername(userName);
-            if(!passwordEncoder.matches(password, user.getPassword())){
-                throw new BadCredentialsException("Incorrect username or password");
-            }
-            response.setId(user.getId());
-            response.setCurrentUserName(user.getName());
-            response.setAccessToken(jwtUtil.generateToken(user));
-            return response;
-        }catch (UsernameNotFoundException ex){
-            throw ex;
+    public LoginResponse login(String userName, String password, String type) throws UsernameNotFoundException, BadCredentialsException {
+        LoginResponse response = new LoginResponse();
+        switch (type) {
+            case RoleConstants.ADMIN:
+                try {
+                    Admin admin = (Admin) this.adminDetailsService.loadUserByUsername(userName);
+                        this.checkPasswords(password,admin.getPassword());
+                        response.setId(admin.getId());
+                        response.setAccessToken(this.jwtUtil.generateToken(admin));
+                        response.setCurrentUserName(admin.getUsername());
+                        this.authenticate(admin);
+                } catch (UsernameNotFoundException | BadCredentialsException ex) {
+                    throw ex;
+                }
+                break;
+            case RoleConstants.DOCTOR:
+                try {
+                    Doctor doctor = (Doctor) this.doctorDetailsService.loadUserByUsername(userName);
+                        this.checkPasswords(password,doctor.getPassword());
+                        response.setId(doctor.getId());
+                        response.setAccessToken(this.jwtUtil.generateToken(doctor));
+                        response.setCurrentUserName(doctor.getUsername());
+                        this.authenticate(doctor);
+                } catch (UsernameNotFoundException | BadCredentialsException ex) {
+                    throw ex;
+                }
+                break;
+            case RoleConstants.PATIENT:
+                try {
+                    Patient patient = (Patient) this.patientDetailsService.loadUserByUsername(userName);
+                        this.checkPasswords(password, patient.getPassword());
+                        response.setId(patient.getId());
+                        response.setAccessToken(this.jwtUtil.generateToken(patient));
+                        response.setCurrentUserName(patient.getPatientName());
+                        this.authenticate(patient);
+                } catch (UsernameNotFoundException | BadCredentialsException ex) {
+                    throw ex;
+                }
+                break;
         }
+        return response;
     }
 
-    public ResponseEntity<?> register(RegisterRequest registerRequest){
-        Optional<User> userToFind = userService.findByEmail(registerRequest.getEmail());
-        if(userToFind.isPresent()){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "The user "+ registerRequest.getName() + " is already saved in our records");
-        }
+    public RegisterResponse register(RegisterRequest registerRequest)throws AlreadyRegisteredUserException {
+        RegisterResponse response = new RegisterResponse();
         Role role = getRoleByType(registerRequest.getRoleType());
-        User user = userService.save( new User(registerRequest.getName(), registerRequest.getEmail(), passwordEncoder.encode(registerRequest.getPassword()),role));
-        role.addUser(user);
-        return ResponseEntity.ok("The user "+ user.getName() + " has been saved in our records");
+        switch (role.getType()){
+            case RoleConstants.ADMIN:
+                try{
+                    Admin admin = new Admin(registerRequest.getName(), registerRequest.getEmail(),
+                            passwordEncoder.encode(registerRequest.getPassword()),role);
+                    checkUserInDatabase(admin);
+                    AdminDetailsService service = (AdminDetailsService) adminDetailsService;
+                    Admin savedAdmin = service.saveAdmin(admin);
+                    response.setMessage("The user "+ savedAdmin.getUsername() + " has been saved in our records");
+                    response.setSuccess(true);
+                }catch (AlreadyRegisteredUserException exception){
+                    response.setMessage(exception.getMessage());
+                    response.setSuccess(false);
+                }
+                break;
+            case RoleConstants.DOCTOR:
+                try{
+                    Doctor doctor = new Doctor(registerRequest.getName(), registerRequest.getEmail(), passwordEncoder.encode(registerRequest.getPassword()),role);
+                    checkUserInDatabase(doctor);
+                    Doctor savedDoctor = ((DoctorDetailsService)this.doctorDetailsService).saveDoctor(doctor);
+                    response.setMessage("The user "+ savedDoctor.getUsername() + " has been saved in our records");
+                    response.setSuccess(true);
+                }catch (AlreadyRegisteredUserException exception){
+                    response.setMessage(exception.getMessage());
+                    response.setSuccess(false);
+                }
+            case RoleConstants.PATIENT:
+                try{
+                    Patient patient = new Patient(registerRequest.getName(),registerRequest.getEmail(),
+                            passwordEncoder.encode(registerRequest.getPassword()),role);
+                    checkUserInDatabase(patient);
+                    Patient savedPatient = ((PatientDetailsService)this.patientDetailsService).savePatient(patient);
+                    response.setMessage("The user "+ savedPatient.getUsername() + " has been saved in our records");
+                    response.setSuccess(true);
+                }catch (AlreadyRegisteredUserException exception){
+                    response.setMessage(exception.getMessage());
+                    response.setSuccess(false);
+                }
+        }
+        return response;
     }
 
-    private Role getRoleByType(String type){
-        return this.roleService.findByType(type);
+    private void checkUserInDatabase(UserDetails user) throws AlreadyRegisteredUserException{
+        if(user instanceof Admin){
+            try{
+                Admin a = (Admin) this.adminDetailsService.loadUserByUsername(((Admin)user).getAdminEmail());
+                if(a != null){
+                    throw new AlreadyRegisteredUserException("This account is already saved in our records");
+                }
+            }catch(UsernameNotFoundException ex){
+                return;
+            }
+        }else if( user instanceof Patient){
+            try{
+                Patient p = (Patient) this.patientDetailsService.loadUserByUsername(((Patient)user).getPatientEmail());
+                if(p != null){
+                    throw new AlreadyRegisteredUserException("This account is already saved in our records");
+                }
+            }catch(UsernameNotFoundException ex){
+                return;
+            }
+        }else if(user instanceof Doctor){
+            try{
+                Doctor d = (Doctor) this.doctorDetailsService.loadUserByUsername(((Doctor)user).getDoctorEmail());
+                if(d != null){
+                    throw new AlreadyRegisteredUserException("This account is already saved in our records");
+                }
+            }catch(UsernameNotFoundException ex){
+                return;
+            }
+        }
+    }
+
+    private Role getRoleByType(String roleType){
+        return this.roleService.findByType(roleType);
+    }
+
+    protected void checkPasswords(CharSequence rawPassword,
+                                  String encoredPassword) throws BadCredentialsException{
+        if(!passwordEncoder.matches(rawPassword,encoredPassword)){
+            throw new BadCredentialsException("incorrect email or password");
+        }
+    }
+
+    public void authenticate(IUserDetails userDetails){
+        UsernamePasswordAuthenticationToken token = UsernamePasswordAuthenticationToken.unauthenticated(
+                userDetails,null
+        );
+        Authentication auth = authenticationManager.authenticate(token);
+        SecurityContextHolder.getContext().setAuthentication(auth);
     }
 }
