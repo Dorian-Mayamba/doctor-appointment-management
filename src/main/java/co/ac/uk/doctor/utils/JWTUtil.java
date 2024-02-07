@@ -12,11 +12,20 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -28,30 +37,29 @@ public class JWTUtil {
     @Value("${app.issuer}")
     private String issuer;
 
-    public String generateToken(IUserDetails user) {
-        Algorithm algorithm = Algorithm.HMAC256(secret);
-            return JWT.create()
-                    .withIssuer(issuer)
-                    .withSubject(user.getUsername())
-                    .withJWTId(String.valueOf(user.getId()))
-                    .withClaim(DoctorRegisteredClaims.ROLE_KEY, user.getRole().getType())
-                    .withExpiresAt(new Date(System.currentTimeMillis() * EXPIRE_DURATION))
-                    .withClaim("createdAt", new Date())
-                    .withIssuedAt(new Date())
-                    .sign(algorithm);
-
+    private final JwtEncoder jwtEncoder;
+    @Autowired
+    public JWTUtil(JwtEncoder encoder){
+        this.jwtEncoder = encoder;
     }
 
-
-    public Claim getClaim(String token, String claimKey) {
-        return JWT.decode(token).getClaim(claimKey);
-    }
-
-    public DecodedJWT verify(String token) {
-        Algorithm algorithm = Algorithm.HMAC256(secret);
-        JWTVerifier verifier = JWT.require(algorithm)
-                .withIssuer(issuer)
+    public String generateToken(Authentication authentication) {
+        Instant now = Instant.now();
+        long expiry = 3600L;
+        String scope = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(" "));
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+                .issuer("self")
+                .issuedAt(now)
+                .expiresAt(now.plusSeconds(expiry))
+                .subject(authentication.getName())
+                .claim("scope", scope)
                 .build();
-        return verifier.verify(token);
+        String token = this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+        System.out.println("token: "+ token);
+        return token;
     }
+
+
 }

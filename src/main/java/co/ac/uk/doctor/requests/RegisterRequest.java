@@ -10,7 +10,8 @@ public class RegisterRequest {
 
     private String email;
 
+    private String number;
+
     private String password;
 
-    private String roleType;
 }

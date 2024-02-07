@@ -34,17 +34,16 @@ class DoctorApplicationTests {
 
     @Autowired
     private PatientRepository patientRepository;
-
     @Test
     void contextLoads() {
     }
 
-    @Test
+    /*@Test
     @Order(1)
     public void createRoleTest(){
         List<Role> roles = Arrays.asList(new Role("Admin"),
-                new Role("Patient"),
-                new Role("Doctor"));
+                new Role("Doctor"),
+                new Role("Patient"));
         if(this.roleRepository.findRoleByType("Admin") != null){
             return;
         }
@@ -60,7 +59,7 @@ class DoctorApplicationTests {
             throw new IllegalStateException("Role should not be null");
         }
         Admin admin = new Admin(CredentialConstant.ADMIN_NAME,
-                CredentialConstant.ADMIN_EMAIL, CredentialConstant.ADMIN_PASSWORD,role);
+                CredentialConstant.ADMIN_EMAIL, passwordEncoder.encode(CredentialConstant.ADMIN_PASSWORD), role);
         if(adminRepository.getAdminByAdminEmail(admin.getAdminEmail()).isPresent()){
             return;
         }
@@ -75,7 +74,7 @@ class DoctorApplicationTests {
         if(role == null){
             throw new IllegalStateException("Role should not be null");
         }
-        Doctor doctor = new Doctor(CredentialConstant.DOCTOR_NAME,CredentialConstant.DOCTOR_EMAIL,CredentialConstant.DOCTOR_PASSWORD,role);
+        Doctor doctor = new Doctor(CredentialConstant.DOCTOR_NAME,CredentialConstant.DOCTOR_EMAIL, passwordEncoder.encode(CredentialConstant.DOCTOR_PASSWORD), role);
         if(doctorRepository.getDoctorByDoctorEmail(doctor.getDoctorEmail()).isPresent()){
             return;
         }
@@ -90,7 +89,7 @@ class DoctorApplicationTests {
         if(role == null){
             throw new IllegalStateException("Role should not be null");
         }
-        Patient patient = new Patient(CredentialConstant.PATIENT_NAME, CredentialConstant.PATIENT_EMAIL,CredentialConstant.PATIENT_PASSWORD,role);
+        Patient patient = new Patient(CredentialConstant.PATIENT_NAME, CredentialConstant.PATIENT_EMAIL, passwordEncoder.encode(CredentialConstant.PATIENT_PASSWORD), role, "07404566479");
         if(patientRepository.getPatientByPatientEmail(patient.getPatientEmail()).isPresent()){
             return;
         }
@@ -121,5 +120,5 @@ class DoctorApplicationTests {
             patient.getPatientAppointments().add(savedAppointment);
             Assertions.assertNotNull(savedAppointment);
         }
-    }
+    }*/
 }

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -26,16 +27,16 @@ public class Admin implements IUserDetails {
     @Column(nullable = false)
     private String adminPassword;
 
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
+
     public Admin(String adminName, String adminEmail, String adminPassword, Role role){
         this.adminName = adminName;
         this.adminEmail = adminEmail;
         this.adminPassword = adminPassword;
         this.role = role;
     }
-
-    @ManyToOne
-    @JoinColumn(name = "role_id")
-    private Role role;
 
     public Admin(){}
 
@@ -84,7 +85,9 @@ public class Admin implements IUserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return Arrays.asList(new Role[]{
+                this.role
+        });
     }
 
     @Override

@@ -3,8 +3,9 @@ package co.ac.uk.doctor.entities;
 import co.ac.uk.doctor.generic.IUserDetails;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 @Entity
@@ -25,13 +26,31 @@ public class Doctor implements IUserDetails {
     @Column(nullable = false, unique = true)
     private String doctorEmail;
 
-    @Column(nullable = false)
+    @Column
     private String doctorPassword;
 
-    public Doctor(String doctorName, String doctorEmail, String doctorPassword, Role role){
+    @Column(nullable = false)
+    private String speciality;
+    public String getSpeciality() {
+        return speciality;
+    }
+
+    public void setSpeciality(String speciality) {
+        this.speciality = speciality;
+    }
+
+    public Doctor(String doctorName, String doctorEmail, String doctorPassword, Role role, String speciality){
         this.doctorName = doctorName;
         this.doctorEmail = doctorEmail;
         this.doctorPassword = doctorPassword;
+        this.speciality = speciality;
+        this.role = role;
+    }
+
+    public Doctor(String doctorName, String doctorEmail, Role role, String speciality){
+        this.doctorName = doctorName;
+        this.doctorEmail = doctorEmail;
+        this.speciality = speciality;
         this.role = role;
     }
 
@@ -92,7 +111,9 @@ public class Doctor implements IUserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return Arrays.asList(new Role[]{
+                this.role
+        });
     }
 
     @Override

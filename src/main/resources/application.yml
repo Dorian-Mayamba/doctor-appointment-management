@@ -1,7 +1,7 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
@@ -13,5 +13,11 @@ spring:
 app:
   secret: "dfdfdfdjfefehjfekjfdw3435"
   issuer: "dorian"
+jwt:
+  private:
+    key: classpath:private-key.pem
+  public:
+    key: classpath:public-key.pem
+
 
 

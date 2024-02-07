@@ -19,4 +19,8 @@ public class RoleService {
     public Role findByType(String type){
         return this.roleRepository.findRoleByType(type);
     }
+
+    public Role findRoleById(Long id){
+        return this.roleRepository.findRoleById(id);
+    }
 }

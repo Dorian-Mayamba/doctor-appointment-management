@@ -34,11 +34,6 @@ import java.util.List;
 @Slf4j
 public class JWTFilter extends OncePerRequestFilter {
     private final String TOKEN_KEY = "jwt_token";
-    private final JWTUtil jwtUtil;
-    @Autowired
-    public JWTFilter(JWTUtil jwtUtil){
-        this.jwtUtil = jwtUtil;
-    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

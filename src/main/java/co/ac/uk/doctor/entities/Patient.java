@@ -3,7 +3,6 @@ package co.ac.uk.doctor.entities;
 import co.ac.uk.doctor.generic.IUserDetails;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
@@ -25,15 +24,27 @@ public class Patient implements IUserDetails {
     private String patientEmail;
 
     @Column(nullable = false)
+    private String patientNumber;
+
+    public String getPatientNumber() {
+        return patientNumber;
+    }
+
+    public void setPatientNumber(String patientNumber) {
+        this.patientNumber = patientNumber;
+    }
+
+    @Column(nullable = false)
     private String patientPassword;
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
-    public Patient(String patientName, String patientEmail, String patientPassword, Role role) {
+    public Patient(String patientName, String patientEmail, String patientPassword, Role role, String number) {
         this.patientName = patientName;
         this.patientEmail = patientEmail;
         this.patientPassword = patientPassword;
         this.role = role;
+        this.patientNumber = number;
     }
 
     public Patient(){

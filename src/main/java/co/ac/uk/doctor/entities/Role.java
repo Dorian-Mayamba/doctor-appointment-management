@@ -40,7 +40,8 @@ public class Role implements GrantedAuthority {
     }
 
     public Role(String type){
-        this.setAuthority(type);
+        this.type = type;
+        this.setAuthority(this.type);
     }
 
     public List<Patient> getPatients() {
