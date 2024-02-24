@@ -4,6 +4,7 @@ import co.ac.uk.doctor.generic.IUserDetails;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -39,6 +40,23 @@ public class Patient implements IUserDetails {
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
+
+    public void setPatientName(String patientName) {
+        this.patientName = patientName;
+    }
+
+    public void setPatientEmail(String patientEmail) {
+        this.patientEmail = patientEmail;
+    }
+
+    public void setPatientPassword(String patientPassword) {
+        this.patientPassword = patientPassword;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     public Patient(String patientName, String patientEmail, String patientPassword, Role role, String number) {
         this.patientName = patientName;
         this.patientEmail = patientEmail;
@@ -74,7 +92,9 @@ public class Patient implements IUserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return Arrays.asList(new Role[]{
+                this.role
+        });
     }
 
     @Override

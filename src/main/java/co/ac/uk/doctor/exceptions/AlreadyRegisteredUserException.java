@@ -1,6 +1,8 @@
 package co.ac.uk.doctor.exceptions;
 
-public class AlreadyRegisteredUserException extends Exception{
+import javax.naming.AuthenticationException;
+
+public class AlreadyRegisteredUserException extends AuthenticationException {
     public AlreadyRegisteredUserException(String message){
         super(message);
     }

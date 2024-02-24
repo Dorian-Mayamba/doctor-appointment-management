@@ -30,7 +30,7 @@ public class DoctorAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        //logger.error("Error: "+ authException.getLocalizedMessage(), authException);
+        logger.error("Error: "+ authException.getLocalizedMessage(), authException);
         HttpStatus status = HttpStatus.UNAUTHORIZED;
         String errorMessage = "Incorrect email or password";
         Map<String, String> parameters = new LinkedHashMap<>();

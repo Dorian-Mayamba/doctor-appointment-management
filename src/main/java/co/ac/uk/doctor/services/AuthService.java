@@ -7,6 +7,8 @@ import co.ac.uk.doctor.entities.Patient;
 import co.ac.uk.doctor.exceptions.AlreadyRegisteredUserException;
 import co.ac.uk.doctor.generic.IUserDetails;
 import co.ac.uk.doctor.generic.IUserDetailsService;
+import co.ac.uk.doctor.requests.AddPatientRequest;
+import co.ac.uk.doctor.requests.EditPatientRequest;
 import co.ac.uk.doctor.requests.RegisterRequest;
 import co.ac.uk.doctor.responses.LoginResponse;
 import co.ac.uk.doctor.responses.RegisterResponse;
@@ -60,71 +62,21 @@ public class AuthService {
         return response;
     }
 
-    public RegisterResponse register(RegisterRequest registerRequest) throws AlreadyRegisteredUserException {
+    public RegisterResponse register(AddPatientRequest addPatientRequest) throws AlreadyRegisteredUserException {
         RegisterResponse response = new RegisterResponse();
-        String roleName = this.findRoleNameByEmail(registerRequest.getEmail());
-        Map<String, Long> roles = RoleConstants.getRoles();
-        switch (roleName) {
-            case RoleConstants.PATIENT:
-                try {
-                    Long roleId = roles.get(roleName);
-                    Role role = this.roleService.findRoleById(roleId);
-                    Patient patient = new Patient(registerRequest.getName(), registerRequest.getEmail(),
-                            passwordEncoder.encode(registerRequest.getPassword()), role, registerRequest.getNumber());
-                    checkUserInDatabase(patient);
-                    Patient savedPatient = ((PatientDetailsService) this.patientDetailsService).savePatient(patient);
-                    response.setMessage("The user " + savedPatient.getUsername() + " has been saved in our records");
-                    response.setSuccess(true);
-                } catch (AlreadyRegisteredUserException exception) {
-                    response.setMessage(exception.getMessage());
-                    response.setSuccess(false);
-                }
-        }
+        PatientDetailsService patientService = (PatientDetailsService) patientDetailsService;
+        Patient patient = patientService.addUser(addPatientRequest);
+        response.setSuccess(true);
+        response.setMessage("Your account has successfully been registered");
         return response;
     }
 
-    private void checkUserInDatabase(UserDetails user) throws AlreadyRegisteredUserException {
-        if (user instanceof Admin) {
-            try {
-                Admin a = (Admin) this.adminDetailsService.loadUserByUsername(((Admin) user).getAdminEmail());
-                if (a != null) {
-                    throw new AlreadyRegisteredUserException("This account is already saved in our records");
-                }
-            } catch (UsernameNotFoundException ex) {
-                return;
-            }
-        } else if (user instanceof Patient) {
-            try {
-                Patient p = (Patient) this.patientDetailsService.loadUserByUsername(((Patient) user).getPatientEmail());
-                if (p != null) {
-                    throw new AlreadyRegisteredUserException("This account is already saved in our records");
-                }
-            } catch (UsernameNotFoundException ex) {
-                return;
-            }
-        } else if (user instanceof Doctor) {
-            try {
-                Doctor d = (Doctor) this.doctorDetailsService.loadUserByUsername(((Doctor) user).getDoctorEmail());
-                if (d != null) {
-                    throw new AlreadyRegisteredUserException("This account is already saved in our records");
-                }
-            } catch (UsernameNotFoundException ex) {
-                return;
-            }
-        }
+    public Patient editPatient(Long patientId, EditPatientRequest editPatientRequest){
+        Patient editedPatient = (Patient) patientDetailsService.editUser(patientId,editPatientRequest);
+        return editedPatient;
     }
 
-    private Role getRoleById(Long id) {
-        return this.roleService.findRoleById(id);
-    }
-
-    private String findRoleNameByEmail(String email) {
-        if (email.contains("@admin.ac.uk")) {
-            return RoleConstants.ADMIN;
-        } else if (email.contains("@doctor.ac.uk")) {
-            return RoleConstants.DOCTOR;
-        } else {
-            return RoleConstants.PATIENT;
-        }
+    public Patient removePatient(Long patientId){
+        return (Patient) patientDetailsService.removeUser(patientId);
     }
 }

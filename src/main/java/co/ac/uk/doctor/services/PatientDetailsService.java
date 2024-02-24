@@ -2,21 +2,26 @@ package co.ac.uk.doctor.services;
 
 import co.ac.uk.doctor.entities.Patient;
 import co.ac.uk.doctor.exceptions.AlreadyRegisteredUserException;
+import co.ac.uk.doctor.generic.AbstractUserDetailsService;
 import co.ac.uk.doctor.generic.IUserDetails;
-import co.ac.uk.doctor.generic.IUserDetailsService;
 import co.ac.uk.doctor.repositories.PatientRepository;
+import co.ac.uk.doctor.requests.*;
+import co.ac.uk.doctor.utils.RoleCheckerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PatientDetailsService implements IUserDetailsService {
+public class PatientDetailsService extends AbstractUserDetailsService<Patient> {
 
     @Autowired
-    PatientRepository patientRepository;
+    private PatientRepository patientRepository;
+
+    @Autowired
+    private PasswordEncoder encoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -40,12 +45,59 @@ public class PatientDetailsService implements IUserDetailsService {
     }
 
     @Override
-    public List<IUserDetails> getUsers() {
-        List<IUserDetails> iUserDetails = new ArrayList<>();
-        for (Patient patient: patientRepository.findAll()){
-            iUserDetails.add(patient);
+    public List<Patient> getUsers() {
+        List<Patient> patients = new ArrayList<>();
+        for (Patient patient:patientRepository.findAll()){
+            patients.add(patient);
         }
-        return iUserDetails;
+        return patients;
+    }
+
+    @Override
+    public Patient removeUser(Long userId) {
+        Patient patient = (Patient) loadUserById(userId);
+        patientRepository.delete(patient);
+        return patient;
+    }
+
+    @Override
+    public Patient editUser(Long userId, EditUserRequest request) {
+        Patient patientToEdit = (Patient) loadUserById(userId);
+        if (request instanceof EditPatientRequest){
+            EditPatientRequest editPatientRequest = (EditPatientRequest) request;
+            patientToEdit.setPatientName(editPatientRequest.getName());
+            patientToEdit.setPatientEmail(editPatientRequest.getEmail());
+            patientToEdit.setPatientPassword(encoder.encode(editPatientRequest.getPassword()));
+            return savePatient(patientToEdit);
+        }
+        return null;
+    }
+
+    @Override
+    public Patient addUser(AddUserRequest request) throws AlreadyRegisteredUserException {
+        try{
+            if (request instanceof AddPatientRequest){
+                AddPatientRequest addPatientRequest = (AddPatientRequest) request;
+                checkUserInDatabase(addPatientRequest.getEmail());
+            }
+        }catch (UsernameNotFoundException exception){
+            return saveUser(exception,new Patient(), request);
+        }
+        throw new IllegalStateException("The class "+ request.getClass().toString() + " Should extend the AddUserRequest class");
+    }
+
+    @Override
+    public Patient saveUser(Exception exception, Patient user, AddUserRequest request) {
+        Patient patient = user;
+        if (exception instanceof UsernameNotFoundException && request instanceof AddPatientRequest){
+            AddPatientRequest addPatientRequest = (AddPatientRequest) request;
+            patient.setPatientName(addPatientRequest.getName());
+            patient.setPatientEmail(addPatientRequest.getEmail());
+            patient.setPatientNumber(addPatientRequest.getNumber());
+            patient.setPatientPassword(encoder.encode(addPatientRequest.getPassword()));
+            patient.setRole(getRole(RoleCheckerUtil.checkRoleByEmail(patient.getPatientEmail())));
+        }
+        return this.savePatient(patient);
     }
 
     public Patient savePatient(Patient patient) {

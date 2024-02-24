@@ -2,13 +2,17 @@ package co.ac.uk.doctor.requests;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@RequiredArgsConstructor
-public class EditDoctorRequest extends AddDoctorRequest{
+public class EditDoctorRequest extends EditUserRequest{
+    private String doctorName;
 
+    private String doctorEmail;
+
+    private String doctorSpeciality;
+
+    private String doctorPassword;
 }

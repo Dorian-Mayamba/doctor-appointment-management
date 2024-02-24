@@ -7,7 +7,7 @@ import lombok.Setter;
 @RequiredArgsConstructor
 @Getter
 @Setter
-public class AddDoctorRequest {
+public class AddDoctorRequest extends AddUserRequest{
     private String doctorName;
 
     private String doctorEmail;

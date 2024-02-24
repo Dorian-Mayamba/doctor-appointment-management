@@ -1,10 +1,9 @@
 package co.ac.uk.doctor.controllers.auth;
 import co.ac.uk.doctor.entities.Doctor;
+import co.ac.uk.doctor.entities.Patient;
 import co.ac.uk.doctor.exceptions.AlreadyRegisteredUserException;
 import co.ac.uk.doctor.generic.IUserDetailsService;
-import co.ac.uk.doctor.requests.AddDoctorRequest;
-import co.ac.uk.doctor.requests.EditDoctorRequest;
-import co.ac.uk.doctor.requests.RegisterRequest;
+import co.ac.uk.doctor.requests.*;
 import co.ac.uk.doctor.responses.AddDoctorResponse;
 import co.ac.uk.doctor.responses.LoginResponse;
 import co.ac.uk.doctor.responses.RegisterResponse;
@@ -19,7 +18,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -58,8 +56,8 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) throws AlreadyRegisteredUserException {
-        RegisterResponse response = this.authService.register(registerRequest);
+    public ResponseEntity<?> register(@RequestBody AddPatientRequest addPatientRequest) throws AlreadyRegisteredUserException {
+        RegisterResponse response = this.authService.register(addPatientRequest);
         return response.isSuccess() ?
                 ResponseEntity.ok(response)
                 : ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -95,28 +93,37 @@ public class AuthController {
 
     @PatchMapping("/admin/doctor/edit/{doctorId}")
     public ResponseEntity<?> editDoctor(@RequestBody EditDoctorRequest editDoctorRequest, @PathVariable("doctorId") Long doctorId){
-        Doctor doctor = (Doctor) doctorDetailsService.loadUserById(doctorId);
-        boolean edited = false;
-        if (!(doctor.getDoctorEmail().equals(editDoctorRequest.getDoctorEmail()))){
-            doctor.setDoctorEmail(editDoctorRequest.getDoctorEmail());
-            edited = true;
-        }
-
-        if (!(doctor.getDoctorName().equals(editDoctorRequest.getDoctorName()))){
-            doctor.setDoctorName(editDoctorRequest.getDoctorName());
-            edited = true;
-        }
-
-        if (!(doctor.getSpeciality().equals(editDoctorRequest.getDoctorSpeciality()))){
-            doctor.setSpeciality(editDoctorRequest.getDoctorSpeciality());
-            edited = true;
-        }
-
-        Doctor updatedDoctor = ((DoctorDetailsService)doctorDetailsService).saveDoctor(doctor);
+        Doctor updatedDoctor = (Doctor) doctorDetailsService.editUser(doctorId,editDoctorRequest);
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("message", "The doctor "+ updatedDoctor.getDoctorName() + " has been modified");
 
+        return ResponseEntity.ok()
+                .body(jsonObject.toString(jsonObject.length()));
+    }
+
+    @DeleteMapping("/admin/doctor/delete/{doctorId}")
+    public ResponseEntity<?> deleteDoctor(@PathVariable("doctorId") Long doctorId){
+        Doctor deletedDoctor = (Doctor) doctorDetailsService.removeUser(doctorId);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("message", "The doctor "+deletedDoctor.getDoctorName() + " has been removed");
+        return ResponseEntity.ok()
+                .body(jsonObject.toString(jsonObject.length()));
+    }
+
+    @PatchMapping("/patient/edit{patientId}")
+    public ResponseEntity<?> editPatient(@PathVariable("patientId") Long patientId, @RequestBody EditPatientRequest request){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("message", "the patient "+ authService.editPatient(patientId,request).getPatientName());
+        return ResponseEntity.ok()
+                .body(jsonObject.toString(jsonObject.length()));
+    }
+
+    @DeleteMapping("/patient/delete/{patientId}")
+    public ResponseEntity<?> removePatient(@PathVariable("patientId") Long patientId){
+        Patient patient = authService.removePatient(patientId);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("message", "Your profile has been successfully deleted");
         return ResponseEntity.ok()
                 .body(jsonObject.toString(jsonObject.length()));
     }

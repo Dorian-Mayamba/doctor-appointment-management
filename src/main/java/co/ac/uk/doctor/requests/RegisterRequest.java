@@ -13,5 +13,4 @@ public class RegisterRequest {
     private String number;
 
     private String password;
-
 }
