@@ -1,17 +1,16 @@
 package co.ac.uk.doctor.services;
 
-import co.ac.uk.doctor.entities.Doctor;
+import co.ac.uk.doctor.entities.jpa.Doctor;
 import co.ac.uk.doctor.exceptions.AlreadyRegisteredUserException;
 import co.ac.uk.doctor.generic.AbstractUserDetailsService;
 import co.ac.uk.doctor.generic.IUserDetails;
-import co.ac.uk.doctor.repositories.DoctorRepository;
+import co.ac.uk.doctor.repositories.jpa.DoctorRepository;
 import co.ac.uk.doctor.requests.AddDoctorRequest;
 import co.ac.uk.doctor.requests.AddUserRequest;
 import co.ac.uk.doctor.requests.EditDoctorRequest;
 import co.ac.uk.doctor.requests.EditUserRequest;
 import co.ac.uk.doctor.utils.RoleCheckerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;

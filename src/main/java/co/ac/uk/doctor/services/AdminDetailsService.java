@@ -1,10 +1,10 @@
 package co.ac.uk.doctor.services;
 
-import co.ac.uk.doctor.entities.Admin;
+import co.ac.uk.doctor.entities.jpa.Admin;
 import co.ac.uk.doctor.exceptions.AlreadyRegisteredUserException;
 import co.ac.uk.doctor.generic.AbstractUserDetailsService;
 import co.ac.uk.doctor.generic.IUserDetails;
-import co.ac.uk.doctor.repositories.AdminRepository;
+import co.ac.uk.doctor.repositories.jpa.AdminRepository;
 import co.ac.uk.doctor.requests.AddAdminRequest;
 import co.ac.uk.doctor.requests.AddUserRequest;
 import co.ac.uk.doctor.requests.EditAdminRequest;

@@ -1,10 +1,9 @@
 package co.ac.uk.doctor.controllers.doctors;
 
-import co.ac.uk.doctor.entities.Doctor;
+import co.ac.uk.doctor.entities.jpa.Doctor;
 import co.ac.uk.doctor.generic.IUserDetails;
 import co.ac.uk.doctor.generic.IUserDetailsService;
 import co.ac.uk.doctor.serializers.DoctorSerializer;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;

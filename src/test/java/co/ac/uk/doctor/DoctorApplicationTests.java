@@ -1,17 +1,10 @@
 package co.ac.uk.doctor;
 
-import co.ac.uk.doctor.constants.CredentialConstant;
-import co.ac.uk.doctor.entities.*;
-import co.ac.uk.doctor.repositories.*;
+import co.ac.uk.doctor.repositories.jpa.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)

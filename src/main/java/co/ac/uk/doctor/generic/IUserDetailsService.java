@@ -1,6 +1,6 @@
 package co.ac.uk.doctor.generic;
 
-import co.ac.uk.doctor.entities.Role;
+import co.ac.uk.doctor.entities.jpa.Role;
 import co.ac.uk.doctor.exceptions.AlreadyRegisteredUserException;
 import co.ac.uk.doctor.requests.AddUserRequest;
 import co.ac.uk.doctor.requests.EditUserRequest;

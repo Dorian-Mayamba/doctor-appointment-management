@@ -1,15 +1,11 @@
 package co.ac.uk.doctor.services;
 
-import co.ac.uk.doctor.entities.Admin;
-import co.ac.uk.doctor.entities.Doctor;
-import co.ac.uk.doctor.entities.Role;
-import co.ac.uk.doctor.entities.Patient;
+import co.ac.uk.doctor.entities.jpa.Patient;
 import co.ac.uk.doctor.exceptions.AlreadyRegisteredUserException;
 import co.ac.uk.doctor.generic.IUserDetails;
 import co.ac.uk.doctor.generic.IUserDetailsService;
 import co.ac.uk.doctor.requests.AddPatientRequest;
 import co.ac.uk.doctor.requests.EditPatientRequest;
-import co.ac.uk.doctor.requests.RegisterRequest;
 import co.ac.uk.doctor.responses.LoginResponse;
 import co.ac.uk.doctor.responses.RegisterResponse;
 import co.ac.uk.doctor.utils.JWTUtil;
@@ -18,13 +14,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import co.ac.uk.doctor.constants.RoleConstants;
-
-import java.util.Map;
 
 @Service
 public class AuthService {

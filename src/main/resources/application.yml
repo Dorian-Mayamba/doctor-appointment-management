@@ -10,6 +10,13 @@ spring:
     url: "jdbc:mysql://localhost/doctor"
     username: "dorian"
     password: "dorian01"
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/doctor
+      database: doctor
+
+
+
 app:
   secret: "dfdfdfdjfefehjfekjfdw3435"
   issuer: "dorian"

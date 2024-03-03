@@ -1,9 +1,7 @@
-package co.ac.uk.doctor.repositories;
+package co.ac.uk.doctor.repositories.jpa;
 
-import co.ac.uk.doctor.entities.Role;
-import org.springframework.data.jpa.repository.Query;
+import co.ac.uk.doctor.entities.jpa.Role;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository

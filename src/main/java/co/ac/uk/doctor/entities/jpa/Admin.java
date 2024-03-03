@@ -1,13 +1,11 @@
-package co.ac.uk.doctor.entities;
+package co.ac.uk.doctor.entities.jpa;
 
 import co.ac.uk.doctor.generic.IUserDetails;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 
 @Entity

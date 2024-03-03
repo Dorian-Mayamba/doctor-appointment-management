@@ -1,8 +1,8 @@
 package co.ac.uk.doctor.seeders;
 
 import co.ac.uk.doctor.constants.CredentialConstant;
-import co.ac.uk.doctor.entities.Patient;
-import co.ac.uk.doctor.repositories.PatientRepository;
+import co.ac.uk.doctor.entities.jpa.Patient;
+import co.ac.uk.doctor.repositories.jpa.PatientRepository;
 import co.ac.uk.doctor.services.RoleService;
 import co.ac.uk.doctor.utils.RoleCheckerUtil;
 import org.springframework.beans.factory.annotation.Autowired;

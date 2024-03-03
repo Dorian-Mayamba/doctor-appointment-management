@@ -1,10 +1,9 @@
-package co.ac.uk.doctor.entities;
+package co.ac.uk.doctor.entities.jpa;
 
 import co.ac.uk.doctor.generic.IUserDetails;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -12,6 +11,18 @@ import java.util.List;
 @Table(name = "doctors")
 public class Doctor implements IUserDetails {
 
+    static enum Status{
+        OFFLINE("offline"),
+        ONLINE("online"),
+        BUSY("busy");
+
+        private Status status;
+
+        private String statusName;
+        Status(String statusName){
+            this.statusName = statusName;
+        }
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
