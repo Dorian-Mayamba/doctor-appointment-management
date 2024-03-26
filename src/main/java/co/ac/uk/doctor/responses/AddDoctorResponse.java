@@ -13,6 +13,8 @@ import org.json.JSONObject;
 public class AddDoctorResponse {
     private String message;
 
+    private boolean success;
+
     @Override
     public String toString() {
         JSONObject jsonObject = new JSONObject();

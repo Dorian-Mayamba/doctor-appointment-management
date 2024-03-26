@@ -13,4 +13,9 @@ public class HelloController {
     public String greet(Authentication authentication){
         return authentication != null ? authentication.getName() : "Hello world";
     }
+
+    @GetMapping("/admin")
+    public String greetAdmin(Authentication authentication){
+        return authentication != null ? String.format("Hello admin %s", authentication.getName()) : "Hello world";
+    }
 }

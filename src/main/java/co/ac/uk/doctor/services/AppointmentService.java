@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
 
 @Service
 public class AppointmentService {
@@ -27,14 +29,20 @@ public class AppointmentService {
         this.patientDetailsService = (PatientDetailsService) patientDetailsService;
     }
 
-    public Appointment saveAppointment(Long doctorId,Long patientId, String date, String time){
+    public Appointment saveAppointment(Long doctorId, Long patientId, LocalDate date, LocalTime time, String title){
         Doctor doctor = (Doctor) doctorDetailsService.loadUserById(doctorId);
         Patient patient = (Patient) patientDetailsService.loadUserById(patientId);
         Appointment appointment = new Appointment();
         appointment.setPatient(patient);
         appointment.setDoctor(doctor);
         appointment.setTime(time);
+        appointment.setTitle(title);
+        appointment.setEndTime(time.plusHours(1));
         appointment.setDate(date);
         return appointmentRepository.save(appointment);
+    }
+
+    public List<Appointment> getAppointments() {
+        return this.appointmentRepository.findAll();
     }
 }

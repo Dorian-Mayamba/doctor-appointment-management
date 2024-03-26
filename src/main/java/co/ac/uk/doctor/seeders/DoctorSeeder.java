@@ -1,6 +1,7 @@
 package co.ac.uk.doctor.seeders;
 
 import co.ac.uk.doctor.constants.CredentialConstant;
+import co.ac.uk.doctor.constants.RoleConstants;
 import co.ac.uk.doctor.entities.jpa.Doctor;
 import co.ac.uk.doctor.repositories.jpa.DoctorRepository;
 import co.ac.uk.doctor.services.RoleService;
@@ -23,10 +24,15 @@ public class DoctorSeeder implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if (!(repository.count() > 0)){
-            repository.save(new Doctor(CredentialConstant.DOCTOR_NAME,
-                    CredentialConstant.DOCTOR_EMAIL,
-                    encoder.encode(CredentialConstant.DOCTOR_PASSWORD),
-                    roleService.findByType(RoleCheckerUtil.checkRoleByEmail(CredentialConstant.DOCTOR_EMAIL)), "Dentist"));
+            repository.save(
+                    Doctor.builder().doctorName(CredentialConstant.DOCTOR_NAME)
+                            .doctorEmail(CredentialConstant.DOCTOR_EMAIL)
+                            .doctorNumber(CredentialConstant.DOCTOR_NUMBER)
+                            .doctorPassword(encoder.encode(CredentialConstant.DOCTOR_PASSWORD))
+                            .speciality("Dentist")
+                            .role(roleService.findByType(RoleCheckerUtil.checkRoleByEmail(CredentialConstant.DOCTOR_EMAIL)))
+                            .build()
+            );
         }
     }
 }

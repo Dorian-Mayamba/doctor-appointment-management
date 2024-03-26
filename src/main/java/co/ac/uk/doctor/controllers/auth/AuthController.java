@@ -65,30 +65,15 @@ public class AuthController {
     }
 
     @PostMapping("/admin/doctor/create")
-    public ResponseEntity<?> addDoctor(@RequestBody AddDoctorRequest addDoctorRequest, Authentication authentication) {
-        if (authentication !=null){
-            log.info("Authenticated has "+ authentication.getName());
-            Doctor doctor = new Doctor(addDoctorRequest.getDoctorName(),
-                    addDoctorRequest.getDoctorEmail(),
-                    roleService.findByType(RoleCheckerUtil.checkRoleByEmail(addDoctorRequest.getDoctorEmail())),
-                    addDoctorRequest.getDoctorSpeciality());
-            try{
-                doctorDetailsService.checkUserInDatabase(doctor.getDoctorEmail());
-                Doctor savedDoctor = ((DoctorDetailsService)this.doctorDetailsService).saveDoctor(doctor);
-                assert savedDoctor != null : "Doctor could not be saved";
-                AddDoctorResponse response = new AddDoctorResponse();
-                response.setMessage("The doctor "+ doctor.getDoctorName() +" has been successfully saved");
-                return ResponseEntity.ok()
-                        .body(response.toString());
-            }catch (AlreadyRegisteredUserException ex){
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("error", ex.getMessage());
-                return ResponseEntity
-                        .badRequest()
-                        .body(jsonObject.toString(jsonObject.length()));
-            }
+    public ResponseEntity<?> addDoctor(@RequestBody AddDoctorRequest addDoctorRequest, Authentication authentication) throws AlreadyRegisteredUserException {
+        if (authentication != null){
+            AddDoctorResponse response = this.authService.addDoctor(addDoctorRequest);
+            return response.isSuccess() ?
+                    ResponseEntity.ok(response)
+                    :ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(response);
         }
-        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You are not authenticated");
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
     }
 
     @PatchMapping("/admin/doctor/edit/{doctorId}")

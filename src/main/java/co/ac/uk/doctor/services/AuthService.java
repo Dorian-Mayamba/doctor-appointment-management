@@ -1,11 +1,14 @@
 package co.ac.uk.doctor.services;
 
+import co.ac.uk.doctor.entities.jpa.Doctor;
 import co.ac.uk.doctor.entities.jpa.Patient;
 import co.ac.uk.doctor.exceptions.AlreadyRegisteredUserException;
 import co.ac.uk.doctor.generic.IUserDetails;
 import co.ac.uk.doctor.generic.IUserDetailsService;
+import co.ac.uk.doctor.requests.AddDoctorRequest;
 import co.ac.uk.doctor.requests.AddPatientRequest;
 import co.ac.uk.doctor.requests.EditPatientRequest;
+import co.ac.uk.doctor.responses.AddDoctorResponse;
 import co.ac.uk.doctor.responses.LoginResponse;
 import co.ac.uk.doctor.responses.RegisterResponse;
 import co.ac.uk.doctor.utils.JWTUtil;
@@ -33,8 +36,8 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public AuthService(JWTUtil jwtUtil, PasswordEncoder passwordEncoder, @Qualifier("createAdminDetailsService") IUserDetailsService adminDetailsService, @Qualifier("createPatientDetailsService") IUserDetailsService patientDetailsService,
-                       @Qualifier("createDoctorDetailsService") IUserDetailsService doctorDetailsService, RoleService roleService, AuthenticationManager authenticationManager) {
+    public AuthService(JWTUtil jwtUtil, PasswordEncoder passwordEncoder, @Qualifier("createAdminDetailsService") IUserDetailsService adminDetailsService, @Qualifier("createPatientDetailsService") IUserDetailsService<Patient> patientDetailsService,
+                       @Qualifier("createDoctorDetailsService") IUserDetailsService<Doctor> doctorDetailsService, RoleService roleService, AuthenticationManager authenticationManager) {
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
         this.adminDetailsService = adminDetailsService;
@@ -45,7 +48,9 @@ public class AuthService {
     }
 
     public LoginResponse login(Authentication authentication) throws UsernameNotFoundException, BadCredentialsException {
-        LoginResponse response = new LoginResponse();
+        LoginResponse response = LoginResponse
+                .builder().
+                build();
         IUserDetails userDetails = (IUserDetails) authentication.getDetails();
         response.setCurrentUserName(authentication.getName());
         response.setId(userDetails.getId());
@@ -63,12 +68,21 @@ public class AuthService {
         return response;
     }
 
-    public Patient editPatient(Long patientId, EditPatientRequest editPatientRequest){
-        Patient editedPatient = (Patient) patientDetailsService.editUser(patientId,editPatientRequest);
+    public AddDoctorResponse addDoctor(AddDoctorRequest addDoctorRequest) throws AlreadyRegisteredUserException {
+        AddDoctorResponse response = new AddDoctorResponse();
+        DoctorDetailsService doctorService = (DoctorDetailsService) doctorDetailsService;
+        Doctor doctor = doctorService.addUser(addDoctorRequest);
+        response.setSuccess(true);
+        response.setMessage("The doctor "+ doctor.getDoctorName() + " has been added");
+        return response;
+    }
+
+    public Patient editPatient(Long patientId, EditPatientRequest editPatientRequest) {
+        Patient editedPatient = (Patient) patientDetailsService.editUser(patientId, editPatientRequest);
         return editedPatient;
     }
 
-    public Patient removePatient(Long patientId){
+    public Patient removePatient(Long patientId) {
         return (Patient) patientDetailsService.removeUser(patientId);
     }
 }

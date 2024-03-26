@@ -1,5 +1,7 @@
 package co.ac.uk.doctor.services;
 
+import co.ac.uk.doctor.constants.ApplicationConstants;
+import co.ac.uk.doctor.constants.CredentialConstant;
 import co.ac.uk.doctor.entities.jpa.Doctor;
 import co.ac.uk.doctor.exceptions.AlreadyRegisteredUserException;
 import co.ac.uk.doctor.generic.AbstractUserDetailsService;
@@ -30,34 +32,27 @@ public class DoctorDetailsService extends AbstractUserDetailsService<Doctor> {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return doctorRepository
                 .getDoctorByDoctorEmail(username)
-                .orElseThrow(()->new UsernameNotFoundException("Could not find "+username));
+                .orElseThrow(() -> new UsernameNotFoundException("Could not find " + username));
     }
 
     @Override
     public UserDetails loadUserById(Long id) {
         return this.doctorRepository
                 .findById(id)
-                .orElseThrow(()->new UsernameNotFoundException("Not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("Not found"));
     }
 
     @Override
-    public void checkUserInDatabase(String username) throws AlreadyRegisteredUserException{
-        try{
-            IUserDetails userDetails = (IUserDetails) loadUserByUsername(username);
-            if (userDetails != null){
-                throw new AlreadyRegisteredUserException("The doctor "+ username + " is already in the database");
-            }
-        }catch (UsernameNotFoundException ex){
-            //Ignore as in this catching this exception means that there is no user
+    public void checkUserInDatabase(String username) throws AlreadyRegisteredUserException {
+        IUserDetails userDetails = (IUserDetails) loadUserByUsername(username);
+        if (userDetails != null) {
+            throw new AlreadyRegisteredUserException("The doctor " + username + " is already in the database");
         }
     }
+
     @Override
     public List<Doctor> getUsers() {
-        List<Doctor> doctors = new ArrayList<>();
-        for (Doctor doctor:doctorRepository.findAll()){
-            doctors.add(doctor);
-        }
-        return doctors;
+        return this.doctorRepository.findAll();
     }
 
 
@@ -71,7 +66,7 @@ public class DoctorDetailsService extends AbstractUserDetailsService<Doctor> {
     @Override
     public Doctor editUser(Long userId, EditUserRequest request) {
         Doctor doctorToEdit = (Doctor) loadUserById(userId);
-        if (request instanceof EditDoctorRequest){
+        if (request instanceof EditDoctorRequest) {
             EditDoctorRequest editDoctorRequest = (EditDoctorRequest) request;
             doctorToEdit.setDoctorName(editDoctorRequest.getDoctorName());
             doctorToEdit.setDoctorEmail(editDoctorRequest.getDoctorEmail());
@@ -83,25 +78,27 @@ public class DoctorDetailsService extends AbstractUserDetailsService<Doctor> {
 
     @Override
     public Doctor addUser(AddUserRequest request) throws AlreadyRegisteredUserException {
-        try{
-            if (request instanceof AddDoctorRequest){
+        try {
+            if (request instanceof AddDoctorRequest) {
                 AddDoctorRequest addDoctorRequest = (AddDoctorRequest) request;
                 checkUserInDatabase(addDoctorRequest.getDoctorEmail());
             }
-        }catch (UsernameNotFoundException ex){
-            return saveUser(ex,new Doctor(), request);
+        } catch (UsernameNotFoundException ex) {
+            return saveUser(ex, new Doctor(), request);
         }
-        throw new IllegalStateException("The class "+request.getClass().toString() + " Should extend the AddUserRequest class");
+        throw new IllegalStateException("The class " + request.getClass().toString() + " Should extend the AddUserRequest class");
     }
 
     @Override
     public Doctor saveUser(Exception exception, Doctor user, AddUserRequest request) {
-        if (request instanceof AddDoctorRequest && exception instanceof UsernameNotFoundException){
+        if (request instanceof AddDoctorRequest && exception instanceof UsernameNotFoundException) {
             Doctor doctor = user;
             AddDoctorRequest addDoctorRequest = (AddDoctorRequest) request;
             doctor.setDoctorName(addDoctorRequest.getDoctorName());
             doctor.setDoctorEmail(addDoctorRequest.getDoctorEmail());
             doctor.setSpeciality(addDoctorRequest.getDoctorSpeciality());
+            doctor.setDoctorNumber(addDoctorRequest.getDoctorNumber());
+            doctor.setDoctorPassword(encoder.encode(CredentialConstant.DOCTOR_PASSWORD));
             doctor.setRole(getRole(RoleCheckerUtil.checkRoleByEmail(doctor.getDoctorEmail())));
             return this.doctorRepository.save(doctor);
         }

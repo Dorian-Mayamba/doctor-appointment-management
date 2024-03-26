@@ -13,4 +13,6 @@ public class AddDoctorRequest extends AddUserRequest{
     private String doctorEmail;
 
     private String doctorSpeciality;
+
+    private String doctorNumber;
 }

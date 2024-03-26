@@ -4,6 +4,7 @@ import co.ac.uk.doctor.entities.jpa.Doctor;
 import co.ac.uk.doctor.generic.IUserDetails;
 import co.ac.uk.doctor.generic.IUserDetailsService;
 import co.ac.uk.doctor.serializers.DoctorSerializer;
+import co.ac.uk.doctor.utils.EntityToSerializerConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -12,30 +13,25 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
 public class DoctorController {
-    private IUserDetailsService doctorDetailService;
+    private IUserDetailsService<Doctor> doctorDetailService;
 
     @Autowired
-    public DoctorController(@Qualifier("createDoctorDetailsService") IUserDetailsService doctorDetailService) {
+    public DoctorController(@Qualifier("createDoctorDetailsService") IUserDetailsService<Doctor> doctorDetailService) {
         this.doctorDetailService = doctorDetailService;
     }
 
     @GetMapping("/doctors")
     public ResponseEntity<?> getDoctors() {
-        List<IUserDetails> userDetails = doctorDetailService.getUsers();
-        List<DoctorSerializer> doctorSerializers = new ArrayList<>();
-        for (IUserDetails iUserDetails : userDetails) {
-            Doctor d = (Doctor) iUserDetails;
-            DoctorSerializer newDoctorSerializer = new DoctorSerializer();
-            newDoctorSerializer.setDoctorId(d.getId());
-            newDoctorSerializer.setDoctorSpeciality(d.getSpeciality());
-            newDoctorSerializer.setDoctorName(d.getDoctorName());
-            newDoctorSerializer.setDoctorEmail(d.getDoctorEmail());
-            doctorSerializers.add(newDoctorSerializer);
-        }
+        List<DoctorSerializer> doctorSerializers =
+                doctorDetailService.getUsers()
+                        .stream()
+                        .map((EntityToSerializerConverter::toDoctorSerializer))
+                        .collect(Collectors.toList());
         return ResponseEntity
                 .ok(doctorSerializers);
     }
@@ -43,11 +39,7 @@ public class DoctorController {
     @GetMapping("/doctor/{doctorId}")
     public ResponseEntity<DoctorSerializer> getDoctor(@PathVariable("doctorId") Long doctorId) {
         Doctor doctor = (Doctor) doctorDetailService.loadUserById(doctorId);
-        DoctorSerializer doctorSerializer = new DoctorSerializer();
-        doctorSerializer.setDoctorName(doctor.getDoctorName());
-        doctorSerializer.setDoctorEmail(doctor.getDoctorEmail());
-        doctorSerializer.setDoctorSpeciality(doctor.getSpeciality());
-        doctorSerializer.setDoctorId(doctorId);
+        DoctorSerializer doctorSerializer = EntityToSerializerConverter.toDoctorSerializer(doctor);
         return ResponseEntity
                 .ok()
                 .body(doctorSerializer);

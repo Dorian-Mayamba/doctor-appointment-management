@@ -44,18 +44,6 @@ public class Role implements GrantedAuthority {
         this.setAuthority(this.type);
     }
 
-    public List<Patient> getPatients() {
-        return patients;
-    }
-
-    public List<Admin> getAdmins() {
-        return admins;
-    }
-
-    public List<Doctor> getDoctors() {
-        return doctors;
-    }
-
     public Role(){}
 
     @Override

@@ -1,19 +1,37 @@
 package co.ac.uk.doctor.entities.jpa;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import lombok.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "appointments")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
+@Setter
 public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(nullable = false)
-    private String date;
+    private String title;
 
     @Column(nullable = false)
-    private String time;
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private LocalDate date;
+
+    @Column(nullable = false)
+    @JsonFormat(pattern = "HH:mm")
+    private LocalTime time;
+
+    @Column(nullable = false)
+    @JsonFormat(pattern = "HH:mm")
+    private LocalTime endTime;
 
     @ManyToOne
     @JoinColumn(name = "patient_id")
@@ -22,56 +40,5 @@ public class Appointment {
     @ManyToOne
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;
-
-    public Appointment(String date, String time, Patient patient, Doctor doctor){
-        this.patient = patient;
-        this.date = date;
-        this.time = time;
-        this.doctor = doctor;
-    }
-
-    public Appointment(){
-
-    }
-
-    public void setDoctor(Doctor doctor) {
-        this.doctor = doctor;
-    }
-
-    public Patient getPatient() {
-        return patient;
-    }
-
-    public Doctor getDoctor() {
-        return doctor;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
-
-    public void setPatient(Patient user) {
-        this.patient = user;
-    }
 
 }

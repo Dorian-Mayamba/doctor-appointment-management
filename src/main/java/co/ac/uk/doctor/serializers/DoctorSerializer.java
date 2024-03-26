@@ -1,11 +1,17 @@
 package co.ac.uk.doctor.serializers;
 
-import lombok.Data;
+import co.ac.uk.doctor.entities.jpa.Appointment;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@Builder
 public class DoctorSerializer {
     private String doctorName;
 
@@ -15,5 +21,7 @@ public class DoctorSerializer {
 
     private String doctorSpeciality;
 
-    private List<AppointmentSerializer> appointmentSerializers;
+    private String doctorNumber;
+
+    private List<AppointmentSerializer> appointments;
 }

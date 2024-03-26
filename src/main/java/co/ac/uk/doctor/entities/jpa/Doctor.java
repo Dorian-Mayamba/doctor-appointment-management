@@ -2,14 +2,23 @@ package co.ac.uk.doctor.entities.jpa;
 
 import co.ac.uk.doctor.generic.IUserDetails;
 import jakarta.persistence.*;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 @Entity
 @Table(name = "doctors")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class Doctor implements IUserDetails {
+
+
 
     static enum Status{
         OFFLINE("offline"),
@@ -37,87 +46,20 @@ public class Doctor implements IUserDetails {
     @Column(nullable = false, unique = true)
     private String doctorEmail;
 
-    @Column
+    @Column(nullable = false)
     private String doctorPassword;
 
     @Column(nullable = false)
     private String speciality;
-    public String getSpeciality() {
-        return speciality;
-    }
 
-    public void setSpeciality(String speciality) {
-        this.speciality = speciality;
-    }
-
-    public Doctor(String doctorName, String doctorEmail, String doctorPassword, Role role, String speciality){
-        this.doctorName = doctorName;
-        this.doctorEmail = doctorEmail;
-        this.doctorPassword = doctorPassword;
-        this.speciality = speciality;
-        this.role = role;
-    }
-
-    public Doctor(String doctorName, String doctorEmail, Role role, String speciality){
-        this.doctorName = doctorName;
-        this.doctorEmail = doctorEmail;
-        this.speciality = speciality;
-        this.role = role;
-    }
-
-    @Override
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public String getDoctorName() {
-        return doctorName;
-    }
-
-    public void setDoctorName(String doctorName) {
-        this.doctorName = doctorName;
-    }
-
-    public String getDoctorEmail() {
-        return doctorEmail;
-    }
-
-    public void setDoctorEmail(String doctorEmail) {
-        this.doctorEmail = doctorEmail;
-    }
-
-    public String getDoctorPassword() {
-        return doctorPassword;
-    }
-
-    public void setDoctorPassword(String doctorPassword) {
-        this.doctorPassword = doctorPassword;
-    }
-
-    public void setDoctorAppointments(List<Appointment> doctorAppointments) {
-        this.doctorAppointments = doctorAppointments;
-    }
-
-    public Doctor(){}
+    @Column(nullable = false)
+    private String doctorNumber;
 
     @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
     List<Appointment> doctorAppointments;
 
     public List<Appointment> getDoctorAppointments() {
         return doctorAppointments;
-    }
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     @Override
