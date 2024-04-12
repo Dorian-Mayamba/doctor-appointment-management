@@ -1,7 +1,7 @@
 package co.ac.uk.doctor.services;
 
-import co.ac.uk.doctor.entities.jpa.Doctor;
-import co.ac.uk.doctor.entities.jpa.Patient;
+import co.ac.uk.doctor.entities.Doctor;
+import co.ac.uk.doctor.entities.Patient;
 import co.ac.uk.doctor.exceptions.AlreadyRegisteredUserException;
 import co.ac.uk.doctor.generic.IUserDetails;
 import co.ac.uk.doctor.generic.IUserDetailsService;

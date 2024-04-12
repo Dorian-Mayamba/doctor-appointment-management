@@ -1,10 +1,9 @@
-package co.ac.uk.doctor.entities.jpa;
+package co.ac.uk.doctor.entities;
 
 import co.ac.uk.doctor.generic.IUserDetails;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -16,22 +15,9 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Doctor implements IUserDetails {
+public class Doctor extends User implements IUserDetails {
 
 
-
-    static enum Status{
-        OFFLINE("offline"),
-        ONLINE("online"),
-        BUSY("busy");
-
-        private Status status;
-
-        private String statusName;
-        Status(String statusName){
-            this.statusName = statusName;
-        }
-    }
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

@@ -1,6 +1,6 @@
-package co.ac.uk.doctor.repositories.jpa;
+package co.ac.uk.doctor.repositories;
 
-import co.ac.uk.doctor.entities.jpa.Patient;
+import co.ac.uk.doctor.entities.Patient;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

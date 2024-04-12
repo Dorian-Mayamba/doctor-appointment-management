@@ -1,8 +1,8 @@
 package co.ac.uk.doctor.seeders;
 
 import co.ac.uk.doctor.constants.CredentialConstant;
-import co.ac.uk.doctor.entities.jpa.Admin;
-import co.ac.uk.doctor.repositories.jpa.AdminRepository;
+import co.ac.uk.doctor.entities.Admin;
+import co.ac.uk.doctor.repositories.AdminRepository;
 import co.ac.uk.doctor.services.RoleService;
 import co.ac.uk.doctor.utils.RoleCheckerUtil;
 import org.springframework.beans.factory.annotation.Autowired;

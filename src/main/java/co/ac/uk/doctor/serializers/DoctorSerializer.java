@@ -1,9 +1,7 @@
 package co.ac.uk.doctor.serializers;
 
-import co.ac.uk.doctor.entities.jpa.Appointment;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data

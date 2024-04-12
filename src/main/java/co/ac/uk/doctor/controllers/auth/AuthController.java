@@ -1,6 +1,6 @@
 package co.ac.uk.doctor.controllers.auth;
-import co.ac.uk.doctor.entities.jpa.Doctor;
-import co.ac.uk.doctor.entities.jpa.Patient;
+import co.ac.uk.doctor.entities.Doctor;
+import co.ac.uk.doctor.entities.Patient;
 import co.ac.uk.doctor.exceptions.AlreadyRegisteredUserException;
 import co.ac.uk.doctor.generic.IUserDetailsService;
 import co.ac.uk.doctor.requests.*;
@@ -8,9 +8,7 @@ import co.ac.uk.doctor.responses.AddDoctorResponse;
 import co.ac.uk.doctor.responses.LoginResponse;
 import co.ac.uk.doctor.responses.RegisterResponse;
 import co.ac.uk.doctor.services.AuthService;
-import co.ac.uk.doctor.services.DoctorDetailsService;
 import co.ac.uk.doctor.services.RoleService;
-import co.ac.uk.doctor.utils.RoleCheckerUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;

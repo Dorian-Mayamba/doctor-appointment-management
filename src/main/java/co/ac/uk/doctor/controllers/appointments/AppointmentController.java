@@ -1,8 +1,8 @@
 package co.ac.uk.doctor.controllers.appointments;
 
-import co.ac.uk.doctor.entities.jpa.Appointment;
-import co.ac.uk.doctor.entities.jpa.Doctor;
-import co.ac.uk.doctor.entities.jpa.Patient;
+import co.ac.uk.doctor.entities.Appointment;
+import co.ac.uk.doctor.entities.Doctor;
+import co.ac.uk.doctor.entities.Patient;
 import co.ac.uk.doctor.generic.IUserDetailsService;
 import co.ac.uk.doctor.requests.AppointmentRequest;
 import co.ac.uk.doctor.serializers.AppointmentSerializer;
@@ -17,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

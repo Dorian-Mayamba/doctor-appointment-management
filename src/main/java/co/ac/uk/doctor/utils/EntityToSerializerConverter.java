@@ -1,8 +1,8 @@
 package co.ac.uk.doctor.utils;
 
-import co.ac.uk.doctor.entities.jpa.Appointment;
-import co.ac.uk.doctor.entities.jpa.Doctor;
-import co.ac.uk.doctor.entities.jpa.Patient;
+import co.ac.uk.doctor.entities.Appointment;
+import co.ac.uk.doctor.entities.Doctor;
+import co.ac.uk.doctor.entities.Patient;
 import co.ac.uk.doctor.serializers.AppointmentSerializer;
 import co.ac.uk.doctor.serializers.DoctorSerializer;
 import co.ac.uk.doctor.serializers.PatientSerializer;

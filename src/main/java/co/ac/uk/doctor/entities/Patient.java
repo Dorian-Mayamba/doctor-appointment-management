@@ -1,4 +1,4 @@
-package co.ac.uk.doctor.entities.jpa;
+package co.ac.uk.doctor.entities;
 
 import co.ac.uk.doctor.generic.IUserDetails;
 import jakarta.persistence.*;
@@ -12,7 +12,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "patients")
-public class Patient implements IUserDetails {
+public class Patient extends User implements IUserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

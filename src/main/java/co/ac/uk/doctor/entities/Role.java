@@ -1,4 +1,4 @@
-package co.ac.uk.doctor.entities.jpa;
+package co.ac.uk.doctor.entities;
 
 
 import jakarta.persistence.*;

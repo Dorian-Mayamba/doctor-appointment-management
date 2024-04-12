@@ -1,10 +1,10 @@
 package co.ac.uk.doctor.services;
 
-import co.ac.uk.doctor.entities.jpa.Appointment;
-import co.ac.uk.doctor.entities.jpa.Doctor;
-import co.ac.uk.doctor.entities.jpa.Patient;
+import co.ac.uk.doctor.entities.Appointment;
+import co.ac.uk.doctor.entities.Doctor;
+import co.ac.uk.doctor.entities.Patient;
 import co.ac.uk.doctor.generic.IUserDetailsService;
-import co.ac.uk.doctor.repositories.jpa.AppointmentRepository;
+import co.ac.uk.doctor.repositories.AppointmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
