@@ -19,5 +19,7 @@ public class PatientSerializer {
 
     private Long patientId;
 
+    private String patientProfile;
+
     private List<AppointmentSerializer> appointmentSerializerList;
 }

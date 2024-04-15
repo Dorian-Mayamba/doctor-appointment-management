@@ -1,10 +1,10 @@
 package co.ac.uk.doctor.services;
 
-import co.ac.uk.doctor.entities.Doctor;
-import co.ac.uk.doctor.entities.Patient;
+import co.ac.uk.doctor.userdetails.Doctor;
+import co.ac.uk.doctor.userdetails.Patient;
 import co.ac.uk.doctor.exceptions.AlreadyRegisteredUserException;
-import co.ac.uk.doctor.generic.IUserDetails;
-import co.ac.uk.doctor.generic.IUserDetailsService;
+import co.ac.uk.doctor.userdetails.generic.IUserDetails;
+import co.ac.uk.doctor.services.generic.IUserDetailsService;
 import co.ac.uk.doctor.requests.AddDoctorRequest;
 import co.ac.uk.doctor.requests.AddPatientRequest;
 import co.ac.uk.doctor.requests.EditPatientRequest;

@@ -1,9 +1,9 @@
 package co.ac.uk.doctor.services;
 
-import co.ac.uk.doctor.entities.Patient;
+import co.ac.uk.doctor.userdetails.Patient;
 import co.ac.uk.doctor.exceptions.AlreadyRegisteredUserException;
-import co.ac.uk.doctor.generic.AbstractUserDetailsService;
-import co.ac.uk.doctor.generic.IUserDetails;
+import co.ac.uk.doctor.services.generic.AbstractUserDetailsService;
+import co.ac.uk.doctor.userdetails.generic.IUserDetails;
 import co.ac.uk.doctor.repositories.PatientRepository;
 import co.ac.uk.doctor.requests.*;
 import co.ac.uk.doctor.utils.RoleCheckerUtil;

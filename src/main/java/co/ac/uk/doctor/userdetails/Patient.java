@@ -1,6 +1,6 @@
-package co.ac.uk.doctor.entities;
+package co.ac.uk.doctor.userdetails;
 
-import co.ac.uk.doctor.generic.IUserDetails;
+import co.ac.uk.doctor.userdetails.generic.IUserDetails;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -26,6 +26,9 @@ public class Patient extends User implements IUserDetails {
 
     @Column(nullable = false)
     private String patientNumber;
+
+    @Column(nullable = true)
+    private String profilePicture;
 
     public String getPatientNumber() {
         return patientNumber;
@@ -79,6 +82,21 @@ public class Patient extends User implements IUserDetails {
     @Override
     public Long getId() {
         return id;
+    }
+
+    @Override
+    public String getName() {
+        return this.patientName;
+    }
+
+    @Override
+    public String getUserProfile() {
+        return this.profilePicture;
+    }
+
+    @Override
+    public void setUserProfile(String imagePath) {
+        this.profilePicture = imagePath;
     }
 
     public void setId(Long id) {

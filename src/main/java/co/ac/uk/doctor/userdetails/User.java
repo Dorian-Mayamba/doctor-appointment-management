@@ -1,4 +1,4 @@
-package co.ac.uk.doctor.entities;
+package co.ac.uk.doctor.userdetails;
 
 import lombok.*;
 
@@ -6,7 +6,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class User {
+public abstract class User{
 
     private Status status;
 

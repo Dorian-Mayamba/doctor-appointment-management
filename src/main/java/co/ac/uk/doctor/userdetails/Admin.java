@@ -1,6 +1,6 @@
-package co.ac.uk.doctor.entities;
+package co.ac.uk.doctor.userdetails;
 
-import co.ac.uk.doctor.generic.IUserDetails;
+import co.ac.uk.doctor.userdetails.generic.IUserDetails;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -71,7 +71,10 @@ public class Admin extends User implements IUserDetails {
         return id;
     }
 
-
+    @Override
+    public String getName() {
+        return this.adminName;
+    }
     public void setId(Long id) {
         this.id = id;
     }

@@ -1,7 +1,7 @@
 package co.ac.uk.doctor.controllers.doctors;
 
-import co.ac.uk.doctor.entities.Doctor;
-import co.ac.uk.doctor.generic.IUserDetailsService;
+import co.ac.uk.doctor.userdetails.Doctor;
+import co.ac.uk.doctor.services.generic.IUserDetailsService;
 import co.ac.uk.doctor.serializers.DoctorSerializer;
 import co.ac.uk.doctor.utils.EntityToSerializerConverter;
 import org.springframework.beans.factory.annotation.Autowired;

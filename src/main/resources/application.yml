@@ -14,6 +14,14 @@ spring:
     mongodb:
       uri: mongodb://localhost:27017/doctor
       database: doctor
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+
+
+
 
 
 

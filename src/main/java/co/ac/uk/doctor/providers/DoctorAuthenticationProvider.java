@@ -1,7 +1,7 @@
 package co.ac.uk.doctor.providers;
 
 import co.ac.uk.doctor.constants.RoleConstants;
-import co.ac.uk.doctor.generic.IUserDetails;
+import co.ac.uk.doctor.userdetails.generic.IUserDetails;
 import co.ac.uk.doctor.services.AdminDetailsService;
 import co.ac.uk.doctor.services.DoctorDetailsService;
 import co.ac.uk.doctor.services.PatientDetailsService;

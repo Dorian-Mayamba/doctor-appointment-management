@@ -3,7 +3,7 @@ package co.ac.uk.doctor.configs;
 import co.ac.uk.doctor.constants.RoleConstants;
 import co.ac.uk.doctor.entrypoints.DoctorAuthenticationEntryPoint;
 import co.ac.uk.doctor.entrypoints.DoctorBearerTokenAccessDeniedHandler;
-import co.ac.uk.doctor.generic.IUserDetailsService;
+import co.ac.uk.doctor.services.generic.IUserDetailsService;
 import co.ac.uk.doctor.providers.DoctorAuthenticationProvider;
 import co.ac.uk.doctor.services.AdminDetailsService;
 import co.ac.uk.doctor.services.DoctorDetailsService;
@@ -51,7 +51,7 @@ public class AppSecurityConfig{
         http
                 .csrf((csrf)->csrf.disable())
                 .authorizeHttpRequests((authorize)->authorize
-                        .requestMatchers("/user", "/auth/register","/auth/login",
+                        .requestMatchers("/user", "/auth/register","/auth/login","/profile/uploads/**",
                                 "doctors/**","doctor/**","patient/**","/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/token").permitAll()
                         .requestMatchers("/auth/admin/**").hasAuthority("SCOPE_"+RoleConstants.ADMIN)
                         .anyRequest().authenticated())

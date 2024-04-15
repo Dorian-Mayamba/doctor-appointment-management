@@ -1,9 +1,9 @@
 package co.ac.uk.doctor.services;
 
-import co.ac.uk.doctor.entities.Appointment;
-import co.ac.uk.doctor.entities.Doctor;
-import co.ac.uk.doctor.entities.Patient;
-import co.ac.uk.doctor.generic.IUserDetailsService;
+import co.ac.uk.doctor.userdetails.Appointment;
+import co.ac.uk.doctor.userdetails.Doctor;
+import co.ac.uk.doctor.userdetails.Patient;
+import co.ac.uk.doctor.services.generic.IUserDetailsService;
 import co.ac.uk.doctor.repositories.AppointmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

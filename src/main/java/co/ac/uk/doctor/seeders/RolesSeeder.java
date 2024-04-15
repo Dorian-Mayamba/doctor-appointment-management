@@ -1,7 +1,7 @@
 package co.ac.uk.doctor.seeders;
 
 import co.ac.uk.doctor.constants.RoleConstants;
-import co.ac.uk.doctor.entities.Role;
+import co.ac.uk.doctor.userdetails.Role;
 import co.ac.uk.doctor.repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

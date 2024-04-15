@@ -21,5 +21,7 @@ public class DoctorSerializer {
 
     private String doctorNumber;
 
+    private String doctorProfile;
+
     private List<AppointmentSerializer> appointments;
 }

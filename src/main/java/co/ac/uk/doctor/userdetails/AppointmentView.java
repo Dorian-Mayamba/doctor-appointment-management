@@ -1,4 +1,4 @@
-package co.ac.uk.doctor.entities;
+package co.ac.uk.doctor.userdetails;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

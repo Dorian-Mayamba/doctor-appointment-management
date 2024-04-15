@@ -1,6 +1,6 @@
-package co.ac.uk.doctor.entities;
+package co.ac.uk.doctor.userdetails;
 
-import co.ac.uk.doctor.generic.IUserDetails;
+import co.ac.uk.doctor.userdetails.generic.IUserDetails;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -41,6 +41,9 @@ public class Doctor extends User implements IUserDetails {
     @Column(nullable = false)
     private String doctorNumber;
 
+    @Column(nullable = true)
+    private String profilePicture;
+
     @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
     List<Appointment> doctorAppointments;
 
@@ -53,6 +56,11 @@ public class Doctor extends User implements IUserDetails {
         return Arrays.asList(new Role[]{
                 this.role
         });
+    }
+
+    @Override
+    public String getUserProfile() {
+        return this.profilePicture;
     }
 
     @Override
@@ -83,5 +91,15 @@ public class Doctor extends User implements IUserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String getName() {
+        return this.doctorName;
+    }
+
+    @Override
+    public void setUserProfile(String imagePath) {
+        this.profilePicture = imagePath;
     }
 }
