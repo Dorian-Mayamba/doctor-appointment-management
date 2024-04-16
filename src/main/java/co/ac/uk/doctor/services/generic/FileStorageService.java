@@ -1,6 +1,6 @@
 package co.ac.uk.doctor.services.generic;
 
-import co.ac.uk.doctor.userdetails.generic.IUserDetails;
+import co.ac.uk.doctor.entities.generic.IUserDetails;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 

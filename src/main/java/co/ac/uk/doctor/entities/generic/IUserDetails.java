@@ -1,6 +1,6 @@
-package co.ac.uk.doctor.userdetails.generic;
+package co.ac.uk.doctor.entities.generic;
 
-import co.ac.uk.doctor.userdetails.Role;
+import co.ac.uk.doctor.entities.Role;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public interface IUserDetails extends UserDetails {
@@ -9,7 +9,7 @@ public interface IUserDetails extends UserDetails {
     String getName();
 
     default void setUserProfile(String imagePath){
-        throw new UnsupportedOperationException("Please implement this method");
+        throw new UnsupportedOperationException("Please implement the setProfile(String imagePath) method");
     }
 
     default String getUserProfile(){
@@ -17,4 +17,8 @@ public interface IUserDetails extends UserDetails {
     }
 
     Role getRole();
+
+    default String getNumber(){
+        throw new UnsupportedOperationException("Please implement the getNumber() method");
+    }
 }

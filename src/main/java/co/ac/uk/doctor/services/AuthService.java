@@ -1,9 +1,9 @@
 package co.ac.uk.doctor.services;
 
-import co.ac.uk.doctor.userdetails.Doctor;
-import co.ac.uk.doctor.userdetails.Patient;
+import co.ac.uk.doctor.entities.Doctor;
+import co.ac.uk.doctor.entities.Patient;
 import co.ac.uk.doctor.exceptions.AlreadyRegisteredUserException;
-import co.ac.uk.doctor.userdetails.generic.IUserDetails;
+import co.ac.uk.doctor.entities.generic.IUserDetails;
 import co.ac.uk.doctor.services.generic.IUserDetailsService;
 import co.ac.uk.doctor.requests.AddDoctorRequest;
 import co.ac.uk.doctor.requests.AddPatientRequest;
@@ -52,9 +52,10 @@ public class AuthService {
                 .builder().
                 build();
         IUserDetails userDetails = (IUserDetails) authentication.getDetails();
-        response.setCurrentUserName(authentication.getName());
+        response.setCurrentUserName(userDetails.getName());
         response.setId(userDetails.getId());
         response.setAccessToken(jwtUtil.generateToken(authentication));
+        response.setEmail(userDetails.getUsername());
         response.setRoleType(userDetails.getRole().getType());
         return response;
     }

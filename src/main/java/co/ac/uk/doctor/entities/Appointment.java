@@ -1,4 +1,4 @@
-package co.ac.uk.doctor.userdetails;
+package co.ac.uk.doctor.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;

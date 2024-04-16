@@ -1,6 +1,6 @@
 package co.ac.uk.doctor.repositories;
 
-import co.ac.uk.doctor.userdetails.Doctor;
+import co.ac.uk.doctor.entities.Doctor;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.stereotype.Repository;
 

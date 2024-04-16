@@ -1,8 +1,8 @@
 package co.ac.uk.doctor.utils;
 
-import co.ac.uk.doctor.userdetails.Appointment;
-import co.ac.uk.doctor.userdetails.Doctor;
-import co.ac.uk.doctor.userdetails.Patient;
+import co.ac.uk.doctor.entities.Appointment;
+import co.ac.uk.doctor.entities.Doctor;
+import co.ac.uk.doctor.entities.Patient;
 import co.ac.uk.doctor.serializers.AppointmentSerializer;
 import co.ac.uk.doctor.serializers.DoctorSerializer;
 import co.ac.uk.doctor.serializers.PatientSerializer;
@@ -19,7 +19,7 @@ public class EntityToSerializerConverter {
                 .doctorEmail(doctor.getDoctorEmail())
                 .doctorName(doctor.getDoctorName())
                 .doctorSpeciality(doctor.getSpeciality())
-                .doctorNumber(doctor.getDoctorNumber())
+                .doctorNumber(doctor.getNumber())
                 .doctorProfile(doctor.getUserProfile())
                 .appointments(toAppointmentsSerializer(doctor.getDoctorAppointments()))
                 .build();
@@ -47,7 +47,7 @@ public class EntityToSerializerConverter {
                 .patientId(patient.getId())
                 .patientName(patient.getPatientName())
                 .patientEmail(patient.getPatientEmail())
-                .patientNumber(patient.getPatientNumber())
+                .patientNumber(patient.getNumber())
                 .patientProfile(patient.getUserProfile())
                 .patientId(patient.getId())
                 .appointmentSerializerList(toAppointmentsSerializer(patient.getPatientAppointments()))

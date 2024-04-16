@@ -1,7 +1,7 @@
 package co.ac.uk.doctor.seeders;
 
 import co.ac.uk.doctor.constants.CredentialConstant;
-import co.ac.uk.doctor.userdetails.Admin;
+import co.ac.uk.doctor.entities.Admin;
 import co.ac.uk.doctor.repositories.AdminRepository;
 import co.ac.uk.doctor.services.RoleService;
 import co.ac.uk.doctor.utils.RoleCheckerUtil;

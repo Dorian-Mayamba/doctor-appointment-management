@@ -1,8 +1,8 @@
 package co.ac.uk.doctor.controllers.appointments;
 
-import co.ac.uk.doctor.userdetails.Appointment;
-import co.ac.uk.doctor.userdetails.Doctor;
-import co.ac.uk.doctor.userdetails.Patient;
+import co.ac.uk.doctor.entities.Appointment;
+import co.ac.uk.doctor.entities.Doctor;
+import co.ac.uk.doctor.entities.Patient;
 import co.ac.uk.doctor.services.generic.IUserDetailsService;
 import co.ac.uk.doctor.requests.AppointmentRequest;
 import co.ac.uk.doctor.serializers.AppointmentSerializer;
@@ -56,18 +56,18 @@ public class AppointmentController {
     }
 
     @GetMapping("/appointments/patients/{patientId}")
-    public ResponseEntity<List<Appointment>> getPatientsAppointments(@PathVariable("patientId") Long patientId) {
+    public ResponseEntity<List<AppointmentSerializer>> getPatientsAppointments(@PathVariable("patientId") Long patientId) {
         Patient patient = (Patient) patientDetailsService.loadUserById(patientId);
         return ResponseEntity.ok(
-                patient.getPatientAppointments()
+                EntityToSerializerConverter.toAppointmentsSerializer(patient.getPatientAppointments())
         );
     }
 
     @GetMapping("/appointments/doctors/{doctorId}")
-    public ResponseEntity<List<Appointment>> getDoctorAppointments(@PathVariable("doctorId") Long doctorId) {
+    public ResponseEntity<List<AppointmentSerializer>> getDoctorAppointments(@PathVariable("doctorId") Long doctorId) {
         Doctor doctor = (Doctor) doctorDetailsService.loadUserById(doctorId);
         return ResponseEntity.ok(
-                doctor.getDoctorAppointments()
+                EntityToSerializerConverter.toAppointmentsSerializer(doctor.getDoctorAppointments())
         );
     }
 }

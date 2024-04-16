@@ -1,10 +1,10 @@
 package co.ac.uk.doctor.services;
 
 import co.ac.uk.doctor.constants.CredentialConstant;
-import co.ac.uk.doctor.userdetails.Doctor;
+import co.ac.uk.doctor.entities.Doctor;
 import co.ac.uk.doctor.exceptions.AlreadyRegisteredUserException;
 import co.ac.uk.doctor.services.generic.AbstractUserDetailsService;
-import co.ac.uk.doctor.userdetails.generic.IUserDetails;
+import co.ac.uk.doctor.entities.generic.IUserDetails;
 import co.ac.uk.doctor.repositories.DoctorRepository;
 import co.ac.uk.doctor.requests.AddDoctorRequest;
 import co.ac.uk.doctor.requests.AddUserRequest;
@@ -95,7 +95,7 @@ public class DoctorDetailsService extends AbstractUserDetailsService<Doctor> {
             doctor.setDoctorName(addDoctorRequest.getDoctorName());
             doctor.setDoctorEmail(addDoctorRequest.getDoctorEmail());
             doctor.setSpeciality(addDoctorRequest.getDoctorSpeciality());
-            doctor.setDoctorNumber(addDoctorRequest.getDoctorNumber());
+            doctor.setNumber(addDoctorRequest.getDoctorNumber());
             doctor.setDoctorPassword(encoder.encode(CredentialConstant.DOCTOR_PASSWORD));
             doctor.setRole(getRole(RoleCheckerUtil.checkRoleByEmail(doctor.getDoctorEmail())));
             return this.doctorRepository.save(doctor);

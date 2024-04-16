@@ -3,11 +3,12 @@ package co.ac.uk.doctor.controllers.profile;
 import co.ac.uk.doctor.requests.ProfileDTO;
 import co.ac.uk.doctor.responses.ProfileResponse;
 import co.ac.uk.doctor.services.ProfileService;
-import co.ac.uk.doctor.userdetails.Doctor;
-import co.ac.uk.doctor.userdetails.Patient;
-import co.ac.uk.doctor.userdetails.generic.IUserDetails;
+import co.ac.uk.doctor.entities.Doctor;
+import co.ac.uk.doctor.entities.Patient;
+import co.ac.uk.doctor.entities.generic.IUserDetails;
 import io.micrometer.common.lang.Nullable;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -25,21 +26,25 @@ public class ProfileController {
     @Autowired
     private ProfileService profileService;
 
-    @PostMapping( value= "/profile/update/{userId}",  consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PutMapping( value= "/profile/update/{email}",  consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<ProfileResponse> updateProfile(
-            @PathVariable("userId") Long userId,
+            @PathVariable("email") String email,
             @RequestPart("profile") @Nullable MultipartFile file,
             @RequestPart("data") ProfileDTO profileDTO) {
         try {
             if(Objects.nonNull(file)){
                 profileDTO.setProfile(file);
             }
-            IUserDetails iUserDetails = profileService.updateProfile(userId, profileDTO);
+            IUserDetails iUserDetails = profileService.updateProfile(email, profileDTO);
             log.info("User: " + iUserDetails.getName() + " profile: " + iUserDetails.getUserProfile());
+            JSONObject userData = new JSONObject(profileDTO);
             return ResponseEntity
                     .ok(ProfileResponse.builder()
                             .message("Your profile has been updated")
                             .profile(iUserDetails.getUserProfile())
+                            .userData(
+                                    userData.toString(userData.length())
+                            )
                             .build());
         } catch (IOException ex) {
             log.error("Error: " + ex.getLocalizedMessage(), ex);
@@ -49,9 +54,9 @@ public class ProfileController {
         }
     }
 
-    @GetMapping("/profile/{userId}")
-    public ResponseEntity<ProfileDTO> getUserProfile(@PathVariable("userId") Long userId) {
-        IUserDetails userDetails = profileService.getUserProfile(userId);
+    @GetMapping("/profile/{email}")
+    public ResponseEntity<ProfileDTO> getUserProfile(@PathVariable("email") String email) {
+        IUserDetails userDetails = profileService.getUserProfile(email);
         if (userDetails instanceof Doctor) {
             Doctor d = (Doctor) userDetails;
             return ResponseEntity.
@@ -60,7 +65,7 @@ public class ProfileController {
                             .builder()
                             .username(d.getName())
                             .email(d.getDoctorEmail())
-                            .number(d.getDoctorNumber()).profilePath(userDetails.getUserProfile()).build());
+                            .number(d.getNumber()).profilePath(userDetails.getUserProfile()).build());
 
         } else {
             Patient p = (Patient) userDetails;
@@ -69,7 +74,7 @@ public class ProfileController {
                     .body(ProfileDTO
                             .builder()
                             .username(p.getPatientName())
-                            .number(p.getPatientNumber())
+                            .number(p.getNumber())
                             .email(p.getPatientEmail()).profilePath(userDetails.getUserProfile()).build());
 
         }

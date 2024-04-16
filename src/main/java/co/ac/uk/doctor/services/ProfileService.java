@@ -1,8 +1,8 @@
 package co.ac.uk.doctor.services;
 
-import co.ac.uk.doctor.userdetails.Doctor;
-import co.ac.uk.doctor.userdetails.Patient;
-import co.ac.uk.doctor.userdetails.generic.IUserDetails;
+import co.ac.uk.doctor.entities.Doctor;
+import co.ac.uk.doctor.entities.Patient;
+import co.ac.uk.doctor.entities.generic.IUserDetails;
 import co.ac.uk.doctor.repositories.DoctorRepository;
 import co.ac.uk.doctor.repositories.PatientRepository;
 import co.ac.uk.doctor.requests.ProfileDTO;
@@ -27,8 +27,8 @@ public class ProfileService {
     @Autowired
     private FileStorageServiceImpl fileStorageService;
 
-    public IUserDetails updateProfile(Long userId, ProfileDTO profileDTO) throws IOException {
-        IUserDetails iUserDetails = getUserProfile(userId);
+    public IUserDetails updateProfile(String email, ProfileDTO profileDTO) throws IOException {
+        IUserDetails iUserDetails = getUserProfile(email);
         if(Objects.nonNull(profileDTO.getProfile())){
             MultipartFile file = profileDTO.getProfile();
             String filename = StringUtils.cleanPath(file.getOriginalFilename());
@@ -38,7 +38,7 @@ public class ProfileService {
             Doctor d = (Doctor) iUserDetails;
             d.setDoctorEmail(profileDTO.getEmail());
             d.setDoctorName(profileDTO.getUsername());
-            d.setDoctorNumber(profileDTO.getNumber());
+            d.setNumber(profileDTO.getNumber());
             doctorRepository.save(d);
         }else if(iUserDetails instanceof Patient){
             Patient p = (Patient) iUserDetails;
@@ -51,13 +51,13 @@ public class ProfileService {
         return iUserDetails;
     }
 
-    public IUserDetails getUserProfile(Long userId){
-        return getPatientOrDoctor(userId);
+    public IUserDetails getUserProfile(String email){
+        return getPatientOrDoctor(email);
     }
 
-    private IUserDetails getPatientOrDoctor(Long userId){
-        Optional<Doctor> doctorOptional = doctorRepository.findById(userId);
-        Optional<Patient> patientOptional = patientRepository.findById(userId);
+    private IUserDetails getPatientOrDoctor(String email){
+        Optional<Doctor> doctorOptional = doctorRepository.getDoctorByDoctorEmail(email);
+        Optional<Patient> patientOptional = patientRepository.getPatientByPatientEmail(email);
         IUserDetails iUserDetails = null;
         if(doctorOptional.isPresent()){
             iUserDetails = doctorOptional.get();

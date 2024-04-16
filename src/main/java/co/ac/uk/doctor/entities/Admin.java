@@ -1,6 +1,6 @@
-package co.ac.uk.doctor.userdetails;
+package co.ac.uk.doctor.entities;
 
-import co.ac.uk.doctor.userdetails.generic.IUserDetails;
+import co.ac.uk.doctor.entities.generic.IUserDetails;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 

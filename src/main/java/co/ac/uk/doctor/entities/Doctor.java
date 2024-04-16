@@ -1,6 +1,6 @@
-package co.ac.uk.doctor.userdetails;
+package co.ac.uk.doctor.entities;
 
-import co.ac.uk.doctor.userdetails.generic.IUserDetails;
+import co.ac.uk.doctor.entities.generic.IUserDetails;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -39,7 +39,7 @@ public class Doctor extends User implements IUserDetails {
     private String speciality;
 
     @Column(nullable = false)
-    private String doctorNumber;
+    private String number;
 
     @Column(nullable = true)
     private String profilePicture;
@@ -70,7 +70,7 @@ public class Doctor extends User implements IUserDetails {
 
     @Override
     public String getUsername() {
-        return this.doctorName;
+        return this.doctorEmail;
     }
 
     @Override
