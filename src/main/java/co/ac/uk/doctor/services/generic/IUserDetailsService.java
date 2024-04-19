@@ -24,5 +24,13 @@ public interface IUserDetailsService<T> extends UserDetailsService {
 
     T saveUser(Exception exception, T user, AddUserRequest request);
 
+    default T findByEmail(String email){
+        throw new UnsupportedOperationException("Please implement this method");
+    }
+
+    default T deleteUser(T user){
+        throw new UnsupportedOperationException("Please implemented this method");
+    }
+
     Role getRole(String roleName);
 }

@@ -11,11 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PatientDetailsService extends AbstractUserDetailsService<Patient> {
+@Service
+public class PatientService extends AbstractUserDetailsService<Patient> {
 
     @Autowired
     private PatientRepository patientRepository;
@@ -37,6 +39,13 @@ public class PatientDetailsService extends AbstractUserDetailsService<Patient> {
     }
 
     @Override
+    public Patient findByEmail(String email) {
+        return patientRepository
+                .getPatientByPatientEmail(email)
+                .orElse(null);
+    }
+
+    @Override
     public void checkUserInDatabase(String username) throws AlreadyRegisteredUserException{
         IUserDetails userDetails = (IUserDetails) loadUserByUsername(username);
         if (userDetails != null){
@@ -51,6 +60,12 @@ public class PatientDetailsService extends AbstractUserDetailsService<Patient> {
             patients.add(patient);
         }
         return patients;
+    }
+
+    @Override
+    public Patient deleteUser(Patient user) {
+        patientRepository.delete(user);
+        return user;
     }
 
     @Override

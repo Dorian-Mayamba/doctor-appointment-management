@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 public class JWTUtil {
-    private static final long EXPIRE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
+    private static final long EXPIRE_DURATION = 24 * 3600L; // 24 hours
 
     @Value("${app.secret}")
     private String secret;
@@ -32,7 +32,7 @@ public class JWTUtil {
 
     public String generateToken(Authentication authentication) {
         Instant now = Instant.now();
-        long expiry = 3600L;
+        long expiry = EXPIRE_DURATION;
         String scope = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(" "));

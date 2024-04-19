@@ -3,8 +3,8 @@ package co.ac.uk.doctor.providers;
 import co.ac.uk.doctor.constants.RoleConstants;
 import co.ac.uk.doctor.entities.generic.IUserDetails;
 import co.ac.uk.doctor.services.AdminDetailsService;
-import co.ac.uk.doctor.services.DoctorDetailsService;
-import co.ac.uk.doctor.services.PatientDetailsService;
+import co.ac.uk.doctor.services.DoctorService;
+import co.ac.uk.doctor.services.PatientService;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,29 +13,29 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class DoctorAuthenticationProvider implements AuthenticationProvider {
 
-    private DoctorDetailsService doctorDetailsService;
+    private DoctorService doctorService;
 
-    private PatientDetailsService patientDetailsService;
+    private PatientService patientService;
 
     private AdminDetailsService adminDetailsService;
 
     private PasswordEncoder passwordEncoder;
     public DoctorAuthenticationProvider(){}
 
-    public DoctorDetailsService getDoctorDetailsService() {
-        return doctorDetailsService;
+    public DoctorService getDoctorDetailsService() {
+        return doctorService;
     }
 
-    public void setDoctorDetailsService(DoctorDetailsService doctorDetailsService) {
-        this.doctorDetailsService = doctorDetailsService;
+    public void setDoctorDetailsService(DoctorService doctorService) {
+        this.doctorService = doctorService;
     }
 
-    public PatientDetailsService getPatientDetailsService() {
-        return patientDetailsService;
+    public PatientService getPatientDetailsService() {
+        return patientService;
     }
 
-    public void setPatientDetailsService(PatientDetailsService patientDetailsService) {
-        this.patientDetailsService = patientDetailsService;
+    public void setPatientDetailsService(PatientService patientService) {
+        this.patientService = patientService;
     }
 
     public AdminDetailsService getAdminDetailsService() {
@@ -63,13 +63,13 @@ public class DoctorAuthenticationProvider implements AuthenticationProvider {
         String role = getRole(authentication.getName());
         switch (role){
             case RoleConstants.DOCTOR :
-                userDetails = (IUserDetails) this.doctorDetailsService.loadUserByUsername(authentication.getName());
+                userDetails = (IUserDetails) this.doctorService.loadUserByUsername(authentication.getName());
                 break;
             case RoleConstants.ADMIN:
                 userDetails = (IUserDetails) this.adminDetailsService.loadUserByUsername(authentication.getName());
                 break;
             case RoleConstants.PATIENT:
-                userDetails = (IUserDetails) this.patientDetailsService.loadUserByUsername(authentication.getName());
+                userDetails = (IUserDetails) this.patientService.loadUserByUsername(authentication.getName());
                 break;
         }
         if (userDetails != null){

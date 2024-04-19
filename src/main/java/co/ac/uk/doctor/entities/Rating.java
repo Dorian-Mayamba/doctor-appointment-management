@@ -11,10 +11,11 @@ import lombok.*;
 @Entity
 public class Rating {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private int rating;
+    private Double rating;
 
     @ManyToOne
     @JoinColumn(name = "doctor_id")

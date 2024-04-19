@@ -30,6 +30,10 @@ public class Appointment {
     private LocalTime time;
 
     @Column(nullable = false)
+    @Builder.Default
+    private Status status = Status.PENDING;
+
+    @Column(nullable = false)
     @JsonFormat(pattern = "HH:mm")
     private LocalTime endTime;
 
@@ -40,5 +44,10 @@ public class Appointment {
     @ManyToOne
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;
+
+
+    static enum Status{
+        PENDING, ACCEPTED,COMPLETED
+    }
 
 }

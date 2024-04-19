@@ -47,6 +47,20 @@ public class Doctor extends User implements IUserDetails {
     @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
     List<Appointment> doctorAppointments;
 
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
+    List<Rating> ratings;
+
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
+    List<Review> reviews;
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public List<Rating> getRatings() {
+        return ratings;
+    }
+
     public List<Appointment> getDoctorAppointments() {
         return doctorAppointments;
     }

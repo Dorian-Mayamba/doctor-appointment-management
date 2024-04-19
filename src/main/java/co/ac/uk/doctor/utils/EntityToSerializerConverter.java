@@ -1,14 +1,11 @@
 package co.ac.uk.doctor.utils;
 
-import co.ac.uk.doctor.entities.Appointment;
-import co.ac.uk.doctor.entities.Doctor;
-import co.ac.uk.doctor.entities.Patient;
-import co.ac.uk.doctor.serializers.AppointmentSerializer;
-import co.ac.uk.doctor.serializers.DoctorSerializer;
-import co.ac.uk.doctor.serializers.PatientSerializer;
+import co.ac.uk.doctor.entities.*;
+import co.ac.uk.doctor.serializers.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class EntityToSerializerConverter {
 
@@ -41,6 +38,18 @@ public class EntityToSerializerConverter {
         return appointmentSerializers;
     }
 
+    public static AppointmentSerializer toAppointmentSerializer(Appointment appointment){
+        return AppointmentSerializer
+                .builder().
+                title(appointment.getTitle())
+                .startTime(appointment.getTime())
+                .endTime(appointment.getEndTime())
+                .date(appointment.getDate())
+                .patientName(appointment.getPatient().getPatientName())
+                .doctorName(appointment.getDoctor().getDoctorName())
+                .build();
+    }
+
     public static PatientSerializer toPatientSerializer(Patient patient) {
         return PatientSerializer
                 .builder()
@@ -51,6 +60,45 @@ public class EntityToSerializerConverter {
                 .patientProfile(patient.getUserProfile())
                 .patientId(patient.getId())
                 .appointmentSerializerList(toAppointmentsSerializer(patient.getPatientAppointments()))
+                .build();
+    }
+
+    public static List<RatingSerializer> toRatingSerializer(List<Rating> ratings) {
+        return
+                ratings.stream()
+                        .map((rating -> RatingSerializer.builder()
+                                .patientPicture(rating.getPatient().getUserProfile())
+                                .patientName(rating.getPatient().getPatientName())
+                                .build()))
+                        .collect(Collectors.toList());
+    }
+
+    public static List<ReviewSerializer> toReviewSerializer(List<Review>  reviews){
+        return
+                reviews.stream()
+                        .map((review -> ReviewSerializer.builder()
+                                .content(review.getContent())
+                                .patientName(review.getPatient().getName())
+                                .patientPicture(review.getPatient().getUserProfile())
+                                .build()))
+                        .collect(Collectors.toList());
+    }
+
+    public static ReviewSerializer toReviewSerializer(Review review){
+        return ReviewSerializer
+                .builder()
+                .content(review.getContent())
+                .patientName(review.getPatient().getName())
+                .patientPicture(review.getPatient().getUserProfile())
+                .build();
+    }
+
+    public static RatingSerializer toRatingSerializer(Rating rating){
+        return RatingSerializer
+                .builder()
+                .rating(rating.getRating())
+                .patientName(rating.getPatient().getName())
+                .patientPicture(rating.getPatient().getUserProfile())
                 .build();
     }
 }

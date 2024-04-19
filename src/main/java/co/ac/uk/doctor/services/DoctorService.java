@@ -15,10 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public class DoctorDetailsService extends AbstractUserDetailsService<Doctor> {
+@Service
+public class DoctorService extends AbstractUserDetailsService<Doctor> {
 
     @Autowired
     private DoctorRepository doctorRepository;
@@ -34,6 +36,13 @@ public class DoctorDetailsService extends AbstractUserDetailsService<Doctor> {
     }
 
     @Override
+    public Doctor findByEmail(String email) {
+        return doctorRepository
+                .getDoctorByDoctorEmail(email)
+                .orElse(null);
+    }
+
+    @Override
     public UserDetails loadUserById(Long id) {
         return this.doctorRepository
                 .findById(id)
@@ -46,6 +55,12 @@ public class DoctorDetailsService extends AbstractUserDetailsService<Doctor> {
         if (userDetails != null) {
             throw new AlreadyRegisteredUserException("The doctor " + username + " is already in the database");
         }
+    }
+
+    @Override
+    public Doctor deleteUser(Doctor user) {
+        doctorRepository.delete(user);
+        return user;
     }
 
     @Override

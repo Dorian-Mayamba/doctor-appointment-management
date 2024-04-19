@@ -12,3 +12,4 @@
 ## [0.0.8.1] - 2024-04-12 - Added an Abstract User class
 ## [0.0.9] - 2024-04-15 - Implemented profile feature
 ## [1.0.0] - 2024-04-16 - added a review and rating feature
+## [1.0.1] - 2024-04-19 - implemented review and rating feature and added an account deletion feature

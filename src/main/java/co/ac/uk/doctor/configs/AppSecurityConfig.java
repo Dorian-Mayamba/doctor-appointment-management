@@ -6,8 +6,8 @@ import co.ac.uk.doctor.entrypoints.DoctorBearerTokenAccessDeniedHandler;
 import co.ac.uk.doctor.services.generic.IUserDetailsService;
 import co.ac.uk.doctor.providers.DoctorAuthenticationProvider;
 import co.ac.uk.doctor.services.AdminDetailsService;
-import co.ac.uk.doctor.services.DoctorDetailsService;
-import co.ac.uk.doctor.services.PatientDetailsService;
+import co.ac.uk.doctor.services.DoctorService;
+import co.ac.uk.doctor.services.PatientService;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -72,8 +72,8 @@ public class AppSecurityConfig{
         DoctorAuthenticationProvider provider = new DoctorAuthenticationProvider();
         provider.setAdminDetailsService((AdminDetailsService) adminDetailsService);
         provider.setPasswordEncoder(encoder);
-        provider.setDoctorDetailsService((DoctorDetailsService) doctorDetailsService);
-        provider.setPatientDetailsService((PatientDetailsService) patientDetailsService);
+        provider.setDoctorDetailsService((DoctorService) doctorDetailsService);
+        provider.setPatientDetailsService((PatientService) patientDetailsService);
         return provider;
     }
 
@@ -82,16 +82,14 @@ public class AppSecurityConfig{
         return new ProviderManager(provider);
     }
 
-
-
     @Bean
     public IUserDetailsService createDoctorDetailsService(){
-        return new DoctorDetailsService();
+        return new DoctorService();
     }
 
     @Bean
     public IUserDetailsService createPatientDetailsService(){
-        return new PatientDetailsService();
+        return new PatientService();
     }
 
     @Bean

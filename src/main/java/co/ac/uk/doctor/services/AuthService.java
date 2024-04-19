@@ -62,7 +62,7 @@ public class AuthService {
 
     public RegisterResponse register(AddPatientRequest addPatientRequest) throws AlreadyRegisteredUserException {
         RegisterResponse response = new RegisterResponse();
-        PatientDetailsService patientService = (PatientDetailsService) patientDetailsService;
+        PatientService patientService = (PatientService) patientDetailsService;
         Patient patient = patientService.addUser(addPatientRequest);
         response.setSuccess(true);
         response.setMessage("Your account has successfully been registered");
@@ -71,7 +71,7 @@ public class AuthService {
 
     public AddDoctorResponse addDoctor(AddDoctorRequest addDoctorRequest) throws AlreadyRegisteredUserException {
         AddDoctorResponse response = new AddDoctorResponse();
-        DoctorDetailsService doctorService = (DoctorDetailsService) doctorDetailsService;
+        DoctorService doctorService = (DoctorService) doctorDetailsService;
         Doctor doctor = doctorService.addUser(addDoctorRequest);
         response.setSuccess(true);
         response.setMessage("The doctor "+ doctor.getDoctorName() + " has been added");

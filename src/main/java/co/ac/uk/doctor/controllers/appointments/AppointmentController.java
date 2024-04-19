@@ -3,12 +3,15 @@ package co.ac.uk.doctor.controllers.appointments;
 import co.ac.uk.doctor.entities.Appointment;
 import co.ac.uk.doctor.entities.Doctor;
 import co.ac.uk.doctor.entities.Patient;
+import co.ac.uk.doctor.requests.UpdateAppointmentRequest;
+import co.ac.uk.doctor.responses.AppointmentDeleteResponse;
+import co.ac.uk.doctor.responses.AppointmentUpdateResponse;
 import co.ac.uk.doctor.services.generic.IUserDetailsService;
 import co.ac.uk.doctor.requests.AppointmentRequest;
 import co.ac.uk.doctor.serializers.AppointmentSerializer;
 import co.ac.uk.doctor.services.AppointmentService;
-import co.ac.uk.doctor.services.DoctorDetailsService;
-import co.ac.uk.doctor.services.PatientDetailsService;
+import co.ac.uk.doctor.services.DoctorService;
+import co.ac.uk.doctor.services.PatientService;
 import co.ac.uk.doctor.utils.EntityToSerializerConverter;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,17 +27,17 @@ public class AppointmentController {
 
     private final AppointmentService appointmentService;
 
-    private final PatientDetailsService patientDetailsService;
+    private final PatientService patientService;
 
-    private final DoctorDetailsService doctorDetailsService;
+    private final DoctorService doctorService;
 
     @Autowired
     public AppointmentController(AppointmentService appointmentService,
                                  @Qualifier("createPatientDetailsService") IUserDetailsService<Patient> patientDetailsService,
                                  @Qualifier("createDoctorDetailsService") IUserDetailsService<Doctor> doctorIUserDetailsService) {
         this.appointmentService = appointmentService;
-        this.patientDetailsService = (PatientDetailsService) patientDetailsService;
-        this.doctorDetailsService = (DoctorDetailsService) doctorIUserDetailsService;
+        this.patientService = (PatientService) patientDetailsService;
+        this.doctorService = (DoctorService) doctorIUserDetailsService;
     }
 
     @GetMapping("/appointments")
@@ -57,7 +60,7 @@ public class AppointmentController {
 
     @GetMapping("/appointments/patients/{patientId}")
     public ResponseEntity<List<AppointmentSerializer>> getPatientsAppointments(@PathVariable("patientId") Long patientId) {
-        Patient patient = (Patient) patientDetailsService.loadUserById(patientId);
+        Patient patient = (Patient) patientService.loadUserById(patientId);
         return ResponseEntity.ok(
                 EntityToSerializerConverter.toAppointmentsSerializer(patient.getPatientAppointments())
         );
@@ -65,9 +68,22 @@ public class AppointmentController {
 
     @GetMapping("/appointments/doctors/{doctorId}")
     public ResponseEntity<List<AppointmentSerializer>> getDoctorAppointments(@PathVariable("doctorId") Long doctorId) {
-        Doctor doctor = (Doctor) doctorDetailsService.loadUserById(doctorId);
+        Doctor doctor = (Doctor) doctorService.loadUserById(doctorId);
         return ResponseEntity.ok(
                 EntityToSerializerConverter.toAppointmentsSerializer(doctor.getDoctorAppointments())
         );
     }
+
+    @PutMapping("/appointments/{appointmentId}/update")
+    public ResponseEntity<AppointmentUpdateResponse> updateAppointment(@PathVariable("appointmentId") Long appointmentId, UpdateAppointmentRequest appointmentUpdateRequest){
+        return appointmentService.updatePatientAppointment(appointmentId, appointmentUpdateRequest);
+    }
+
+    @DeleteMapping("/appointments/{appointmentId}/cancel")
+    public ResponseEntity<AppointmentDeleteResponse> cancelAppointment(@PathVariable("appointmentId") Long appointmentId){
+        return appointmentService.cancelAppointment(appointmentId);
+    }
+
+
+
 }

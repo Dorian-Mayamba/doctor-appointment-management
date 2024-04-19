@@ -1,7 +1,9 @@
 package co.ac.uk.doctor.controllers.profile;
 
 import co.ac.uk.doctor.requests.ProfileDTO;
+import co.ac.uk.doctor.responses.DeleteProfileResponse;
 import co.ac.uk.doctor.responses.ProfileResponse;
+import co.ac.uk.doctor.responses.UpdateProfileResponse;
 import co.ac.uk.doctor.services.ProfileService;
 import co.ac.uk.doctor.entities.Doctor;
 import co.ac.uk.doctor.entities.Patient;
@@ -27,7 +29,7 @@ public class ProfileController {
     private ProfileService profileService;
 
     @PutMapping( value= "/profile/update/{email}",  consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<ProfileResponse> updateProfile(
+    public ResponseEntity<UpdateProfileResponse> updateProfile(
             @PathVariable("email") String email,
             @RequestPart("profile") @Nullable MultipartFile file,
             @RequestPart("data") ProfileDTO profileDTO) {
@@ -35,22 +37,12 @@ public class ProfileController {
             if(Objects.nonNull(file)){
                 profileDTO.setProfile(file);
             }
-            IUserDetails iUserDetails = profileService.updateProfile(email, profileDTO);
-            log.info("User: " + iUserDetails.getName() + " profile: " + iUserDetails.getUserProfile());
-            JSONObject userData = new JSONObject(profileDTO);
-            return ResponseEntity
-                    .ok(ProfileResponse.builder()
-                            .message("Your profile has been updated")
-                            .profile(iUserDetails.getUserProfile())
-                            .userData(
-                                    userData.toString(userData.length())
-                            )
-                            .build());
+            return profileService.updateProfile(email,profileDTO);
         } catch (IOException ex) {
             log.error("Error: " + ex.getLocalizedMessage(), ex);
             return ResponseEntity
                     .status(HttpStatus.EXPECTATION_FAILED)
-                    .body(ProfileResponse.builder().message("Failed to update your profile").build());
+                    .body(UpdateProfileResponse.builder().message("Failed to update your profile").build());
         }
     }
 
@@ -89,6 +81,11 @@ public class ProfileController {
         }catch (Exception ex){
             throw new RuntimeException("could not load file");
         }
+    }
+
+    @DeleteMapping("/profile/delete/{email}")
+    public ResponseEntity<DeleteProfileResponse> deleteProfile(@PathVariable("email")String email){
+        return profileService.deleteProfile(email);
     }
 
 }
