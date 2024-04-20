@@ -54,7 +54,7 @@ public class AppointmentController {
         JSONObject jsonObject = new JSONObject();
         Appointment appointment = appointmentService.saveAppointment(doctorId, patientId,
                 request.getDate(), request.getTime(), request.getTitle());
-        jsonObject.put("message", "The appointment of the date " + appointment.getDate() + " has been booked");
+        jsonObject.put("message", String.format("Your appointment for %s at %s has been successfully scheduled", appointment.getDate(), appointment.getTime()));
         return ResponseEntity.status(HttpStatus.CREATED).body(jsonObject.toString(jsonObject.length()));
     }
 
@@ -75,7 +75,7 @@ public class AppointmentController {
     }
 
     @PutMapping("/appointments/{appointmentId}/update")
-    public ResponseEntity<AppointmentUpdateResponse> updateAppointment(@PathVariable("appointmentId") Long appointmentId, UpdateAppointmentRequest appointmentUpdateRequest){
+    public ResponseEntity<AppointmentUpdateResponse> updateAppointment(@PathVariable("appointmentId") Long appointmentId, @RequestBody UpdateAppointmentRequest appointmentUpdateRequest){
         return appointmentService.updatePatientAppointment(appointmentId, appointmentUpdateRequest);
     }
 

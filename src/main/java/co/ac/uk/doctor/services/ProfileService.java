@@ -36,6 +36,7 @@ public class ProfileService {
         }
         if (userDetails instanceof Doctor){
             Doctor d = (Doctor) userDetails;
+            doctorService.saveDoctor(d);
             UpdateProfileResponse profileResponse =
                     UpdateProfileResponse
                             .builder()
@@ -49,6 +50,7 @@ public class ProfileService {
 
         }else{
             Patient p = (Patient) userDetails;
+            patientService.savePatient(p);
             UpdateProfileResponse profileResponse =
                     UpdateProfileResponse
                             .builder()

@@ -24,4 +24,10 @@ public class DoctorSerializer {
     private String doctorProfile;
 
     private List<AppointmentSerializer> appointments;
+
+    private List<ReviewSerializer> reviews;
+
+    private List<RatingSerializer> ratings;
+
+    private Double averageRating;
 }

@@ -1,5 +1,6 @@
 package co.ac.uk.doctor.entrypoints;
 
+import co.ac.uk.doctor.exceptions.AlreadyRegisteredUserException;
 import co.ac.uk.doctor.responses.ErrorResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -62,9 +63,19 @@ public class DoctorAuthenticationEntryPoint implements AuthenticationEntryPoint 
             }
         }
 
+        ErrorResponse errorResponse = new ErrorResponse();
+        if (authException instanceof AlreadyRegisteredUserException){
+            errorMessage = authException.getMessage();
+            errorResponse.setError("Unauthorized");
+        }else{
+            errorResponse.setError("Unauthenticated");
+        }
+        errorResponse.setMessage(errorMessage);
+        errorResponse.setPath(request.getRequestURI());
+
         ResponseEntity<ErrorResponse> responseEntity = ResponseEntity
                 .status(status)
-                .body(new ErrorResponse("Unauthenticated", errorMessage, request.getRequestURI()));
+                .body(errorResponse);
         String wwwAuthenticateHeaderValue = computeWWWAuthenticateHeaderValue(parameters);
         response.addHeader("WWW-Authenticate", wwwAuthenticateHeaderValue);
         response.setStatus(status.value());

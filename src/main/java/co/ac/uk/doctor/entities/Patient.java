@@ -73,8 +73,22 @@ public class Patient extends User implements IUserDetails {
         super();
     }
 
-    @OneToMany(mappedBy = "patient", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "patient", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     List<Appointment> patientAppointments;
+
+    @OneToMany(mappedBy = "patient", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    List<Rating> ratings;
+
+    @OneToMany(mappedBy = "patient", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private List<Review> reviews;
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public List<Rating> getRatings() {
+        return ratings;
+    }
 
     public List<Appointment> getPatientAppointments() {
         return patientAppointments;

@@ -19,6 +19,9 @@ public class EntityToSerializerConverter {
                 .doctorNumber(doctor.getNumber())
                 .doctorProfile(doctor.getUserProfile())
                 .appointments(toAppointmentsSerializer(doctor.getDoctorAppointments()))
+                .averageRating(getAvgRating(doctor.getRatings()))
+                .ratings(toRatingSerializer(doctor.getRatings()))
+                .reviews(toReviewSerializer(doctor.getReviews()))
                 .build();
     }
 
@@ -100,5 +103,16 @@ public class EntityToSerializerConverter {
                 .patientName(rating.getPatient().getName())
                 .patientPicture(rating.getPatient().getUserProfile())
                 .build();
+    }
+
+    private static Double getAvgRating(List<Rating> ratings){
+        Double avgRating = 0.0;
+        if (ratings.size() == 0){
+            return avgRating;
+        }
+        for (Rating rating:ratings){
+            avgRating+=rating.getRating();
+        }
+        return avgRating / ratings.size();
     }
 }
