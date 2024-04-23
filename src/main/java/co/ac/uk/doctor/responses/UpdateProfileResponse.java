@@ -10,5 +10,7 @@ import lombok.*;
 public class UpdateProfileResponse {
     private String message;
     private String profile;
-    String userData;
+    private String username;
+    private String email;
+    private String number;
 }

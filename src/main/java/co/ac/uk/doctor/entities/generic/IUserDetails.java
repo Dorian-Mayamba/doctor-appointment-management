@@ -7,18 +7,27 @@ public interface IUserDetails extends UserDetails {
     Long getId();
 
     String getName();
+    void setName(String name);
 
-    default void setUserProfile(String imagePath){
+    String getEmail();
+
+    void setEmail(String email);
+
+    default void setProfile(String imagePath){
         throw new UnsupportedOperationException("Please implement the setProfile(String imagePath) method");
     }
-
-    default String getUserProfile(){
+    default String getProfile(){
         throw new UnsupportedOperationException("Please implement this method");
     }
 
-    Role getRole();
-
+    default void setNumber(String number){
+        throw new UnsupportedOperationException("Please implement this method "+ getClass().toString());
+    }
     default String getNumber(){
         throw new UnsupportedOperationException("Please implement the getNumber() method");
     }
+
+
+    Role getRole();
+
 }

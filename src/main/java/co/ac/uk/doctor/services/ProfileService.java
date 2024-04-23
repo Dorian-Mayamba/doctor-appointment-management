@@ -30,19 +30,24 @@ public class ProfileService {
     public ResponseEntity<UpdateProfileResponse> updateProfile(String email, ProfileDTO profileDTO) throws IOException {
 
         IUserDetails userDetails = getUserProfile(email);
-        JSONObject data = new JSONObject(profileDTO);
+        JSONObject data = new JSONObject();
         if (Objects.nonNull(profileDTO.getProfile())){
-            userDetails.setUserProfile(profileDTO.getProfile().getOriginalFilename());
+            userDetails.setProfile(profileDTO.getProfile().getOriginalFilename());
         }
+        userDetails.setEmail(profileDTO.getEmail());
+        userDetails.setName(profileDTO.getUsername());
+        userDetails.setNumber(profileDTO.getNumber());
         if (userDetails instanceof Doctor){
             Doctor d = (Doctor) userDetails;
             doctorService.saveDoctor(d);
             UpdateProfileResponse profileResponse =
                     UpdateProfileResponse
                             .builder()
-                            .profile(d.getUserProfile())
+                            .profile(d.getProfile())
+                            .username(d.getName())
+                            .number(d.getNumber())
+                            .email(d.getEmail())
                             .message("Your profile has been updated")
-                            .userData(data.toString(data.length()))
                             .build();
             return ResponseEntity
                     .ok()
@@ -54,9 +59,11 @@ public class ProfileService {
             UpdateProfileResponse profileResponse =
                     UpdateProfileResponse
                             .builder()
-                            .profile(p.getUserProfile())
+                            .profile(p.getProfile())
                             .message("Your profile has been updated")
-                            .userData(data.toString(data.length()))
+                            .username(p.getName())
+                            .email(p.getEmail())
+                            .number(p.getNumber())
                             .build();
             return ResponseEntity
                     .ok()

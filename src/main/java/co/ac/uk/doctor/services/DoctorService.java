@@ -3,6 +3,7 @@ package co.ac.uk.doctor.services;
 import co.ac.uk.doctor.constants.CredentialConstant;
 import co.ac.uk.doctor.entities.Doctor;
 import co.ac.uk.doctor.exceptions.AlreadyRegisteredUserException;
+import co.ac.uk.doctor.serializers.DoctorSerializer;
 import co.ac.uk.doctor.services.generic.AbstractUserDetailsService;
 import co.ac.uk.doctor.entities.generic.IUserDetails;
 import co.ac.uk.doctor.repositories.DoctorRepository;
@@ -10,6 +11,7 @@ import co.ac.uk.doctor.requests.AddDoctorRequest;
 import co.ac.uk.doctor.requests.AddUserRequest;
 import co.ac.uk.doctor.requests.EditDoctorRequest;
 import co.ac.uk.doctor.requests.EditUserRequest;
+import co.ac.uk.doctor.utils.EntityToSerializerConverter;
 import co.ac.uk.doctor.utils.RoleCheckerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,14 +33,14 @@ public class DoctorService extends AbstractUserDetailsService<Doctor> {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return doctorRepository
-                .getDoctorByDoctorEmail(username)
+                .findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Could not find " + username));
     }
 
     @Override
     public Doctor findByEmail(String email) {
         return doctorRepository
-                .getDoctorByDoctorEmail(email)
+                .findByEmail(email)
                 .orElse(null);
     }
 
@@ -68,6 +70,10 @@ public class DoctorService extends AbstractUserDetailsService<Doctor> {
         return this.doctorRepository.findAll();
     }
 
+    public List<DoctorSerializer> findBySpeciality(String speciality){
+        return EntityToSerializerConverter
+                .toDoctorSerializer(doctorRepository.findBySpeciality(speciality));
+    }
 
     @Override
     public Doctor removeUser(Long userId) {
@@ -81,8 +87,8 @@ public class DoctorService extends AbstractUserDetailsService<Doctor> {
         Doctor doctorToEdit = (Doctor) loadUserById(userId);
         if (request instanceof EditDoctorRequest) {
             EditDoctorRequest editDoctorRequest = (EditDoctorRequest) request;
-            doctorToEdit.setDoctorName(editDoctorRequest.getDoctorName());
-            doctorToEdit.setDoctorEmail(editDoctorRequest.getDoctorEmail());
+            doctorToEdit.setName(editDoctorRequest.getDoctorName());
+            doctorToEdit.setEmail(editDoctorRequest.getDoctorEmail());
             doctorToEdit.setSpeciality(editDoctorRequest.getDoctorSpeciality());
             return saveDoctor(doctorToEdit);
         }
@@ -107,12 +113,12 @@ public class DoctorService extends AbstractUserDetailsService<Doctor> {
         if (request instanceof AddDoctorRequest && exception instanceof UsernameNotFoundException) {
             Doctor doctor = user;
             AddDoctorRequest addDoctorRequest = (AddDoctorRequest) request;
-            doctor.setDoctorName(addDoctorRequest.getDoctorName());
-            doctor.setDoctorEmail(addDoctorRequest.getDoctorEmail());
+            doctor.setName(addDoctorRequest.getDoctorName());
+            doctor.setEmail(addDoctorRequest.getDoctorEmail());
             doctor.setSpeciality(addDoctorRequest.getDoctorSpeciality());
             doctor.setNumber(addDoctorRequest.getDoctorNumber());
-            doctor.setDoctorPassword(encoder.encode(CredentialConstant.DOCTOR_PASSWORD));
-            doctor.setRole(getRole(RoleCheckerUtil.checkRoleByEmail(doctor.getDoctorEmail())));
+            doctor.setPassword(encoder.encode(CredentialConstant.DOCTOR_PASSWORD));
+            doctor.setRole(getRole(RoleCheckerUtil.checkRoleByEmail(doctor.getEmail())));
             return this.doctorRepository.save(doctor);
         }
         return null;

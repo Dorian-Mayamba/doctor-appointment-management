@@ -10,7 +10,8 @@ import org.json.JSONObject;
 @AllArgsConstructor
 @Builder
 public class ProfileResponse {
-    private String message;
+    private String username;
+    private String email;
+    private String number;
     private String profile;
-    String userData;
 }

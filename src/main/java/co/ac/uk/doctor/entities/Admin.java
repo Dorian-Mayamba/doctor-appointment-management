@@ -2,6 +2,7 @@ package co.ac.uk.doctor.entities;
 
 import co.ac.uk.doctor.entities.generic.IUserDetails;
 import jakarta.persistence.*;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Arrays;
@@ -10,6 +11,11 @@ import java.util.Collection;
 
 @Entity
 @Table(name = "admins")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Admin extends User implements IUserDetails {
 
     @Id
@@ -17,54 +23,21 @@ public class Admin extends User implements IUserDetails {
     private Long id;
 
     @Column(nullable = false)
-    private String adminName;
+    private String name;
 
     @Column(nullable = false, unique = true)
-    private String adminEmail;
+    private String email;
 
     @Column(nullable = false)
-    private String adminPassword;
+    private String password;
+    @Column(nullable = false)
+    private String number;
+    @Column(nullable = true)
+    private String profile;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
-
-    public Admin(String adminName, String adminEmail, String adminPassword, Role role){
-        this.adminName = adminName;
-        this.adminEmail = adminEmail;
-        this.adminPassword = adminPassword;
-        this.role = role;
-    }
-
-    public Admin(){}
-
-    public String getAdminName() {
-        return adminName;
-    }
-
-    public void setAdminName(String adminName) {
-        this.adminName = adminName;
-    }
-
-    public String getAdminEmail() {
-        return adminEmail;
-    }
-
-    public void setAdminEmail(String adminEmail) {
-        this.adminEmail = adminEmail;
-    }
-
-    public String getAdminPassword() {
-        return adminPassword;
-    }
-
-    public void setAdminPassword(String adminPassword) {
-        this.adminPassword = adminPassword;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
 
     @Override
     public Long getId() {
@@ -73,7 +46,7 @@ public class Admin extends User implements IUserDetails {
 
     @Override
     public String getName() {
-        return this.adminName;
+        return this.name;
     }
     public void setId(Long id) {
         this.id = id;
@@ -90,15 +63,9 @@ public class Admin extends User implements IUserDetails {
                 this.role
         });
     }
-
-    @Override
-    public String getPassword() {
-        return this.adminPassword;
-    }
-
     @Override
     public String getUsername() {
-        return this.adminName;
+        return this.name;
     }
 
     @Override

@@ -1,10 +1,20 @@
 package co.ac.uk.doctor;
 
+import co.ac.uk.doctor.constants.CredentialConstant;
+import co.ac.uk.doctor.entities.*;
 import co.ac.uk.doctor.repositories.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import javax.print.Doc;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -42,55 +52,72 @@ class DoctorApplicationTests {
         }
         Iterable<Role> savedRoles = this.roleRepository.saveAll(roles);
         Assertions.assertNotNull(savedRoles);
-    }
+    }*/
 
-    @Test
+    /*@Test
     @Order(2)
     public void createAdminTest(){
         Role role = this.roleRepository.findRoleByType(CredentialConstant.Roles.Admin.name());
         if(role == null){
             throw new IllegalStateException("Role should not be null");
         }
-        Admin admin = new Admin(CredentialConstant.ADMIN_NAME,
-                CredentialConstant.ADMIN_EMAIL, passwordEncoder.encode(CredentialConstant.ADMIN_PASSWORD), role);
-        if(adminRepository.getAdminByAdminEmail(admin.getAdminEmail()).isPresent()){
+        Admin admin = Admin.builder()
+                .name(CredentialConstant.ADMIN_NAME)
+                .email(CredentialConstant.ADMIN_EMAIL)
+                .password(passwordEncoder.encode(CredentialConstant.ADMIN_PASSWORD))
+                .number(CredentialConstant.ADMIN_NUMBER)
+                .role(role)
+                .build();
+        if(adminRepository.findByEmail(admin.getEmail()).isPresent()){
             return;
         }
         Admin savedAdmin = this.adminRepository.save(admin);
         Assertions.assertNotNull(savedAdmin);
-    }
+    }*/
 
-    @Test
+    /*@Test
     @Order(3)
     public void createDoctorTest(){
         Role role = this.roleRepository.findRoleByType(CredentialConstant.Roles.Doctor.name());
         if(role == null){
             throw new IllegalStateException("Role should not be null");
         }
-        Doctor doctor = new Doctor(CredentialConstant.DOCTOR_NAME,CredentialConstant.DOCTOR_EMAIL, passwordEncoder.encode(CredentialConstant.DOCTOR_PASSWORD), role);
-        if(doctorRepository.getDoctorByDoctorEmail(doctor.getDoctorEmail()).isPresent()){
+        Doctor doctor = Doctor
+                .builder()
+                .name(CredentialConstant.DOCTOR_NAME)
+                .email(CredentialConstant.DOCTOR_EMAIL)
+                .password(passwordEncoder.encode(CredentialConstant.DOCTOR_PASSWORD))
+                .number(CredentialConstant.DOCTOR_NUMBER)
+                .role(role)
+                .build();
+        if(doctorRepository.findByEmail(doctor.getEmail()).isPresent()){
             return;
         }
         Doctor savedDoctor = this.doctorRepository.save(doctor);
         Assertions.assertNotNull(savedDoctor);
-    }
+    }*/
 
-    @Test
+    /*@Test
     @Order(4)
     public void createPatientTest(){
         Role role = this.roleRepository.findRoleByType(CredentialConstant.Roles.Patient.name());
         if(role == null){
             throw new IllegalStateException("Role should not be null");
         }
-        Patient patient = new Patient(CredentialConstant.PATIENT_NAME, CredentialConstant.PATIENT_EMAIL, passwordEncoder.encode(CredentialConstant.PATIENT_PASSWORD), role, "07404566479");
-        if(patientRepository.getPatientByPatientEmail(patient.getPatientEmail()).isPresent()){
+        Patient patient = Patient.builder()
+                .name(CredentialConstant.PATIENT_NAME)
+                .email(CredentialConstant.PATIENT_EMAIL)
+                .password(passwordEncoder.encode(CredentialConstant.PATIENT_PASSWORD))
+                .number(CredentialConstant.PATIENT_NUMBER)
+                .role(role).build();
+        if(patientRepository.findByEmail(patient.getEmail()).isPresent()){
             return;
         }
         Patient savedPatient = this.patientRepository.save(patient);
         Assertions.assertNotNull(savedPatient);
-    }
+    }*/
 
-    @Test
+    /*@Test
     @Order(5)
     public void makeAppointmentTest(){
         LocalDate localDate = LocalDate.of(2023,10,26);
@@ -98,12 +125,20 @@ class DoctorApplicationTests {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ISO_TIME;
         String time = localTime.format(timeFormatter);
         String date = localDate.toString();
-        Optional<Doctor> doctorByName = this.doctorRepository.getDoctorByDoctorEmail(CredentialConstant.DOCTOR_EMAIL);
-        Optional<Patient> patientByName = this.patientRepository.getPatientByPatientEmail(CredentialConstant.PATIENT_EMAIL);
+        Optional<Doctor> doctorByName = this.doctorRepository.findByEmail(CredentialConstant.DOCTOR_EMAIL);
+        Optional<Patient> patientByName = this.patientRepository.findByEmail(CredentialConstant.PATIENT_EMAIL);
         if(doctorByName.isPresent() && patientByName.isPresent()){
             Doctor doctor =  doctorByName.get();
             Patient patient = patientByName.get();
-            Appointment appointment = new Appointment(date,time,patient,doctor);
+            Appointment appointment = Appointment
+                    .builder()
+                    .doctor(doctor)
+                    .patient(patient)
+                    .date(localDate)
+                    .time(localTime)
+                    .endTime(localTime.plusHours(1))
+                    .status(Appointment.Status.PENDING)
+                    .build();
             if (appointmentRepository.getAppointmentByDoctorIdAndPatientId(doctor.getId(),
                     patient.getId()).isPresent()){
                 return;

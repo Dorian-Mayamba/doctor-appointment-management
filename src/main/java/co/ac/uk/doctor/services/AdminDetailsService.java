@@ -28,7 +28,7 @@ public class AdminDetailsService extends AbstractUserDetailsService<Admin> {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return adminRepository.getAdminByAdminEmail(username)
+        return adminRepository.findByEmail(username)
                 .orElseThrow(()-> new UsernameNotFoundException("Could not find admin email: "+ username));
     }
 
@@ -68,9 +68,9 @@ public class AdminDetailsService extends AbstractUserDetailsService<Admin> {
         Admin admin = (Admin)loadUserById(userId);
         if (request instanceof EditAdminRequest){
             EditAdminRequest editAdminRequest = (EditAdminRequest) request;
-            admin.setAdminEmail(editAdminRequest.getAdminEmail());
-            admin.setAdminName(editAdminRequest.getAdminName());
-            admin.setAdminPassword(encoder.encode(editAdminRequest.getAdminPassword()));
+            admin.setEmail(editAdminRequest.getAdminEmail());
+            admin.setName(editAdminRequest.getAdminName());
+            admin.setPassword(encoder.encode(editAdminRequest.getAdminPassword()));
             return saveAdmin(admin);
         }
         return null;
@@ -93,10 +93,10 @@ public class AdminDetailsService extends AbstractUserDetailsService<Admin> {
     public Admin saveUser(Exception exception, Admin user, AddUserRequest request) {
         Admin admin = user;
         if (request instanceof AddAdminRequest && exception instanceof UsernameNotFoundException){
-            admin.setAdminName(((AddAdminRequest)request).getAdminName());
-            admin.setAdminEmail(((AddAdminRequest)request).getAdminEmail());
-            admin.setAdminPassword(encoder.encode(((AddAdminRequest)request).getAdminPassword()));
-            admin.setRole(getRole(RoleCheckerUtil.checkRoleByEmail(admin.getAdminEmail())));
+            admin.setName(((AddAdminRequest)request).getAdminName());
+            admin.setEmail(((AddAdminRequest)request).getAdminEmail());
+            admin.setPassword(encoder.encode(((AddAdminRequest)request).getAdminPassword()));
+            admin.setRole(getRole(RoleCheckerUtil.checkRoleByEmail(admin.getEmail())));
         }
         return saveAdmin(admin);
     }

@@ -24,10 +24,10 @@ public class DoctorSeeder implements CommandLineRunner {
     public void run(String... args) throws Exception {
         if (!(repository.count() > 0)){
             repository.save(
-                    Doctor.builder().doctorName(CredentialConstant.DOCTOR_NAME)
-                            .doctorEmail(CredentialConstant.DOCTOR_EMAIL)
+                    Doctor.builder().name(CredentialConstant.DOCTOR_NAME)
+                            .email(CredentialConstant.DOCTOR_EMAIL)
                             .number(CredentialConstant.DOCTOR_NUMBER)
-                            .doctorPassword(encoder.encode(CredentialConstant.DOCTOR_PASSWORD))
+                            .password(encoder.encode(CredentialConstant.DOCTOR_PASSWORD))
                             .speciality("Dentist")
                             .role(roleService.findByType(RoleCheckerUtil.checkRoleByEmail(CredentialConstant.DOCTOR_EMAIL)))
                             .build()

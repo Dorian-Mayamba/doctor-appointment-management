@@ -46,7 +46,7 @@ public class Appointment {
     private Doctor doctor;
 
 
-    static enum Status{
+    public static enum Status{
         PENDING, ACCEPTED,COMPLETED
     }
 

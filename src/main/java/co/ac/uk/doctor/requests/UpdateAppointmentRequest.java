@@ -1,6 +1,8 @@
 package co.ac.uk.doctor.requests;
 
+import co.ac.uk.doctor.entities.Appointment;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.micrometer.common.lang.Nullable;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -16,4 +18,7 @@ public class UpdateAppointmentRequest {
     private LocalDate date;
     @JsonFormat(pattern = "HH:mm")
     private LocalTime time;
+
+   @Nullable
+   private Appointment.Status status;
 }

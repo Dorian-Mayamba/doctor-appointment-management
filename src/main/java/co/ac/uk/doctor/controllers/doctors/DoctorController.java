@@ -7,12 +7,10 @@ import co.ac.uk.doctor.responses.AddDoctorResponse;
 import co.ac.uk.doctor.services.DoctorService;
 import co.ac.uk.doctor.services.FileStorageServiceImpl;
 import co.ac.uk.doctor.entities.Doctor;
-import co.ac.uk.doctor.services.generic.IUserDetailsService;
 import co.ac.uk.doctor.serializers.DoctorSerializer;
 import co.ac.uk.doctor.utils.EntityToSerializerConverter;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +18,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.print.Doc;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,13 +46,18 @@ public class DoctorController {
                 .ok(doctorSerializers);
     }
 
+    @GetMapping("/doctors/{speciality}")
+    public ResponseEntity<List<DoctorSerializer>> findBySpeciality(@PathVariable("speciality") String speciality){
+        return ResponseEntity.ok(doctorService.findBySpeciality(speciality));
+    }
+
     @PostMapping("/doctors/create")
     public ResponseEntity<?> createDoctor(@RequestBody AddDoctorRequest addDoctorRequest, Authentication authentication) throws AlreadyRegisteredUserException {
         if (authentication != null){
             Doctor doctor = this.doctorService.addUser(addDoctorRequest);
             return ResponseEntity
                     .ok()
-                    .body(new AddDoctorResponse("The doctor "+doctor.getDoctorName() + "has been added", true));
+                    .body(new AddDoctorResponse("The doctor "+doctor.getName() + "has been added", true));
         }
         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
     }
@@ -65,7 +67,7 @@ public class DoctorController {
         Doctor updatedDoctor = (Doctor) doctorService.editUser(doctorId,editDoctorRequest);
 
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("message", "The doctor "+ updatedDoctor.getDoctorName() + " has been modified");
+        jsonObject.put("message", "The doctor "+ updatedDoctor.getName() + " has been modified");
 
         return ResponseEntity.ok()
                 .body(jsonObject.toString(jsonObject.length()));
@@ -75,7 +77,7 @@ public class DoctorController {
     public ResponseEntity<?> deleteDoctor(@PathVariable("doctorId") Long doctorId){
         Doctor deletedDoctor = (Doctor) doctorService.removeUser(doctorId);
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("message", "The doctor "+deletedDoctor.getDoctorName() + " has been removed");
+        jsonObject.put("message", "The doctor "+deletedDoctor.getName() + " has been removed");
         return ResponseEntity.ok()
                 .body(jsonObject.toString(jsonObject.length()));
     }

@@ -13,16 +13,22 @@ public class EntityToSerializerConverter {
         return DoctorSerializer
                 .builder()
                 .doctorId(doctor.getId())
-                .doctorEmail(doctor.getDoctorEmail())
-                .doctorName(doctor.getDoctorName())
+                .doctorEmail(doctor.getEmail())
+                .doctorName(doctor.getName())
                 .doctorSpeciality(doctor.getSpeciality())
                 .doctorNumber(doctor.getNumber())
-                .doctorProfile(doctor.getUserProfile())
+                .doctorProfile(doctor.getProfile())
                 .appointments(toAppointmentsSerializer(doctor.getDoctorAppointments()))
                 .averageRating(getAvgRating(doctor.getRatings()))
                 .ratings(toRatingSerializer(doctor.getRatings()))
                 .reviews(toReviewSerializer(doctor.getReviews()))
                 .build();
+    }
+
+    public static List<DoctorSerializer> toDoctorSerializer(List<Doctor> doctors){
+        return doctors.stream()
+                .map(EntityToSerializerConverter::toDoctorSerializer)
+                .collect(Collectors.toList());
     }
 
     public static List<AppointmentSerializer> toAppointmentsSerializer(List<Appointment> appointments) {
@@ -34,8 +40,8 @@ public class EntityToSerializerConverter {
                     .startTime(appointment.getTime())
                     .endTime(appointment.getEndTime())
                     .date(appointment.getDate())
-                    .patientName(appointment.getPatient().getPatientName())
-                    .doctorName(appointment.getDoctor().getDoctorName())
+                    .patientName(appointment.getPatient().getName())
+                    .doctorName(appointment.getDoctor().getName())
                     .build());
         }
         return appointmentSerializers;
@@ -48,8 +54,8 @@ public class EntityToSerializerConverter {
                 .startTime(appointment.getTime())
                 .endTime(appointment.getEndTime())
                 .date(appointment.getDate())
-                .patientName(appointment.getPatient().getPatientName())
-                .doctorName(appointment.getDoctor().getDoctorName())
+                .patientName(appointment.getPatient().getName())
+                .doctorName(appointment.getDoctor().getName())
                 .build();
     }
 
@@ -57,10 +63,10 @@ public class EntityToSerializerConverter {
         return PatientSerializer
                 .builder()
                 .patientId(patient.getId())
-                .patientName(patient.getPatientName())
-                .patientEmail(patient.getPatientEmail())
+                .patientName(patient.getName())
+                .patientEmail(patient.getEmail())
                 .patientNumber(patient.getNumber())
-                .patientProfile(patient.getUserProfile())
+                .patientProfile(patient.getProfile())
                 .patientId(patient.getId())
                 .appointmentSerializerList(toAppointmentsSerializer(patient.getPatientAppointments()))
                 .build();
@@ -70,8 +76,8 @@ public class EntityToSerializerConverter {
         return
                 ratings.stream()
                         .map((rating -> RatingSerializer.builder()
-                                .patientPicture(rating.getPatient().getUserProfile())
-                                .patientName(rating.getPatient().getPatientName())
+                                .patientPicture(rating.getPatient().getProfile())
+                                .patientName(rating.getPatient().getName())
                                 .build()))
                         .collect(Collectors.toList());
     }
@@ -82,7 +88,7 @@ public class EntityToSerializerConverter {
                         .map((review -> ReviewSerializer.builder()
                                 .content(review.getContent())
                                 .patientName(review.getPatient().getName())
-                                .patientPicture(review.getPatient().getUserProfile())
+                                .patientPicture(review.getPatient().getProfile())
                                 .build()))
                         .collect(Collectors.toList());
     }
@@ -92,7 +98,7 @@ public class EntityToSerializerConverter {
                 .builder()
                 .content(review.getContent())
                 .patientName(review.getPatient().getName())
-                .patientPicture(review.getPatient().getUserProfile())
+                .patientPicture(review.getPatient().getProfile())
                 .build();
     }
 
@@ -101,7 +107,7 @@ public class EntityToSerializerConverter {
                 .builder()
                 .rating(rating.getRating())
                 .patientName(rating.getPatient().getName())
-                .patientPicture(rating.getPatient().getUserProfile())
+                .patientPicture(rating.getPatient().getProfile())
                 .build();
     }
 

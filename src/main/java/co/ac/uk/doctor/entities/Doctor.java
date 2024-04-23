@@ -10,14 +10,12 @@ import java.util.Collection;
 import java.util.List;
 @Entity
 @Table(name = "doctors")
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class Doctor extends User implements IUserDetails {
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -27,22 +25,20 @@ public class Doctor extends User implements IUserDetails {
     private Role role;
 
     @Column(nullable = false)
-    private String doctorName;
-
+    private String name;
     @Column(nullable = false, unique = true)
-    private String doctorEmail;
+    private String email;
 
     @Column(nullable = false)
-    private String doctorPassword;
+    private String password;
 
     @Column(nullable = false)
     private String speciality;
 
     @Column(nullable = false)
     private String number;
-
     @Column(nullable = true)
-    private String profilePicture;
+    private String profile;
 
     @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     List<Appointment> doctorAppointments;
@@ -53,18 +49,6 @@ public class Doctor extends User implements IUserDetails {
     @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     List<Review> reviews;
 
-    public List<Review> getReviews() {
-        return reviews;
-    }
-
-    public List<Rating> getRatings() {
-        return ratings;
-    }
-
-    public List<Appointment> getDoctorAppointments() {
-        return doctorAppointments;
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays.asList(new Role[]{
@@ -72,19 +56,10 @@ public class Doctor extends User implements IUserDetails {
         });
     }
 
-    @Override
-    public String getUserProfile() {
-        return this.profilePicture;
-    }
-
-    @Override
-    public String getPassword() {
-        return this.doctorPassword;
-    }
 
     @Override
     public String getUsername() {
-        return this.doctorEmail;
+        return this.email;
     }
 
     @Override
@@ -107,13 +82,4 @@ public class Doctor extends User implements IUserDetails {
         return true;
     }
 
-    @Override
-    public String getName() {
-        return this.doctorName;
-    }
-
-    @Override
-    public void setUserProfile(String imagePath) {
-        this.profilePicture = imagePath;
-    }
 }

@@ -22,9 +22,14 @@ public class PatientsSeeder implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if (!(patientRepository.count() > 0)){
-            patientRepository.save(new Patient(CredentialConstant.PATIENT_NAME,CredentialConstant.PATIENT_EMAIL,
-                    encoder.encode(CredentialConstant.PATIENT_PASSWORD),
-                    roleService.findByType(RoleCheckerUtil.checkRoleByEmail(CredentialConstant.PATIENT_EMAIL)),CredentialConstant.PATIENT_NUMBER));
+            patientRepository.save(Patient
+                    .builder()
+                    .name(CredentialConstant.PATIENT_NAME)
+                    .email(CredentialConstant.PATIENT_EMAIL)
+                    .number(CredentialConstant.PATIENT_NUMBER)
+                    .password(encoder.encode(CredentialConstant.PATIENT_PASSWORD))
+                    .role(roleService.findByType(RoleCheckerUtil.checkRoleByEmail(CredentialConstant.PATIENT_EMAIL)))
+                    .build());
         }
     }
 }

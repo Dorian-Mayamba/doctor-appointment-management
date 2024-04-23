@@ -57,6 +57,7 @@ public class AppointmentService {
         if(appointment != null){
             appointment.setDate(appointmentUpdateRequest.getDate());
             appointment.setTime(appointmentUpdateRequest.getTime());
+            appointment.setStatus(appointmentUpdateRequest.getStatus() != null ? appointmentUpdateRequest.getStatus() : appointment.getStatus());
             appointmentRepository.save(appointment);
             return ResponseEntity.ok(
                     AppointmentUpdateResponse
@@ -89,6 +90,6 @@ public class AppointmentService {
         }
         return ResponseEntity
                 .badRequest()
-                .body(new AppointmentDeleteResponse("Could not deleted your appointment"));
+                .body(new AppointmentDeleteResponse("Could not delete your appointment"));
     }
 }

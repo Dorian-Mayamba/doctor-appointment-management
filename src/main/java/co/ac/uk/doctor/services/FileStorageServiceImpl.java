@@ -30,7 +30,7 @@ public class FileStorageServiceImpl implements FileStorageService {
 
         try(InputStream inputStream = file.getInputStream()){
             Path filePath = root.resolve(filename);
-            userDetails.setUserProfile(filename.toString());
+            userDetails.setProfile(filename.toString());
             Files.copy(inputStream,filePath, StandardCopyOption.REPLACE_EXISTING);
         }catch (IOException ex){
             throw new IOException("Could not save image file: "+ filename, ex);

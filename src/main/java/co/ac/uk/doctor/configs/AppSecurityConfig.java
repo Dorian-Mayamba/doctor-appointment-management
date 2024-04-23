@@ -52,7 +52,7 @@ public class AppSecurityConfig{
                 .csrf((csrf)->csrf.disable())
                 .authorizeHttpRequests((authorize)->authorize
                         .requestMatchers("/user", "/auth/register","/auth/login","/profile/uploads/**",
-                                "/doctors","/doctor/**","/patients","/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/token").permitAll()
+                                "/doctors","/doctor/**","/patients", "/patient**","/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/token").permitAll()
                         .requestMatchers("/auth/admin/**").hasAuthority("SCOPE_"+RoleConstants.ADMIN)
                         .requestMatchers("/doctors/create", "/doctors/update/**", "doctor/delete/**").hasAuthority("SCOPE_" + RoleConstants.ADMIN)
                         .requestMatchers("/patients/create", "patients/update/**", "patients/delete/**").hasAuthority("SCOPE_"+RoleConstants.ADMIN)

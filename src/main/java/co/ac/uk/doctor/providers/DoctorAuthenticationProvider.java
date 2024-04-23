@@ -59,6 +59,12 @@ public class DoctorAuthenticationProvider implements AuthenticationProvider {
         if(!this.supports(authentication.getClass())){
             return null;
         }
+        if (authentication.isAuthenticated()){
+            UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) authentication;
+            IUserDetails userDetails = (IUserDetails) token.getPrincipal();
+            token.setDetails(userDetails);
+            return token;
+        }
         IUserDetails userDetails = null;
         String role = getRole(authentication.getName());
         switch (role){
@@ -76,7 +82,7 @@ public class DoctorAuthenticationProvider implements AuthenticationProvider {
             if (!passwordEncoder.matches(authentication.getCredentials().toString(), userDetails.getPassword())){
                 return null;
             }else{
-                UsernamePasswordAuthenticationToken token = UsernamePasswordAuthenticationToken.authenticated(userDetails.getUsername(), userDetails.getPassword(),userDetails.getAuthorities());
+                UsernamePasswordAuthenticationToken token = UsernamePasswordAuthenticationToken.authenticated(userDetails, null,userDetails.getAuthorities());
                 token.setDetails(userDetails);
                 return token;
             }

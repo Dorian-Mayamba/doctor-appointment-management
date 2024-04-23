@@ -27,7 +27,7 @@ public class PatientService extends AbstractUserDetailsService<Patient> {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return patientRepository.getPatientByPatientEmail(username)
+        return patientRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Could not find username: " + username));
     }
 
@@ -41,7 +41,7 @@ public class PatientService extends AbstractUserDetailsService<Patient> {
     @Override
     public Patient findByEmail(String email) {
         return patientRepository
-                .getPatientByPatientEmail(email)
+                .findByEmail(email)
                 .orElse(null);
     }
 
@@ -80,9 +80,10 @@ public class PatientService extends AbstractUserDetailsService<Patient> {
         Patient patientToEdit = (Patient) loadUserById(userId);
         if (request instanceof EditPatientRequest){
             EditPatientRequest editPatientRequest = (EditPatientRequest) request;
-            patientToEdit.setPatientName(editPatientRequest.getName());
-            patientToEdit.setPatientEmail(editPatientRequest.getEmail());
-            patientToEdit.setPatientPassword(encoder.encode(editPatientRequest.getPassword()));
+            patientToEdit.setName(editPatientRequest.getName());
+            patientToEdit.setEmail(editPatientRequest.getEmail());
+            patientToEdit.setNumber(editPatientRequest.getNumber());
+            patientToEdit.setPassword(encoder.encode(editPatientRequest.getPassword()));
             return savePatient(patientToEdit);
         }
         return null;
@@ -106,11 +107,11 @@ public class PatientService extends AbstractUserDetailsService<Patient> {
         Patient patient = user;
         if (exception instanceof UsernameNotFoundException && request instanceof AddPatientRequest){
             AddPatientRequest addPatientRequest = (AddPatientRequest) request;
-            patient.setPatientName(addPatientRequest.getName());
-            patient.setPatientEmail(addPatientRequest.getEmail());
-            patient.setPatientNumber(addPatientRequest.getNumber());
-            patient.setPatientPassword(encoder.encode(addPatientRequest.getPassword()));
-            patient.setRole(getRole(RoleCheckerUtil.checkRoleByEmail(patient.getPatientEmail())));
+            patient.setName(addPatientRequest.getName());
+            patient.setEmail(addPatientRequest.getEmail());
+            patient.setNumber(addPatientRequest.getNumber());
+            patient.setPassword(encoder.encode(addPatientRequest.getPassword()));
+            patient.setRole(getRole(RoleCheckerUtil.checkRoleByEmail(patient.getEmail())));
         }
         return this.savePatient(patient);
     }

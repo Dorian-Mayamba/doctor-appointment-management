@@ -10,7 +10,6 @@ import co.ac.uk.doctor.entities.Patient;
 import co.ac.uk.doctor.entities.generic.IUserDetails;
 import io.micrometer.common.lang.Nullable;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -47,27 +46,27 @@ public class ProfileController {
     }
 
     @GetMapping("/profile/{email}")
-    public ResponseEntity<ProfileDTO> getUserProfile(@PathVariable("email") String email) {
+    public ResponseEntity<ProfileResponse> getUserProfile(@PathVariable("email") String email) {
         IUserDetails userDetails = profileService.getUserProfile(email);
         if (userDetails instanceof Doctor) {
             Doctor d = (Doctor) userDetails;
             return ResponseEntity.
                     ok()
-                    .body(ProfileDTO
+                    .body(ProfileResponse
                             .builder()
                             .username(d.getName())
-                            .email(d.getDoctorEmail())
-                            .number(d.getNumber()).profilePath(userDetails.getUserProfile()).build());
+                            .email(d.getEmail())
+                            .number(d.getNumber()).profile(userDetails.getProfile()).build());
 
         } else {
             Patient p = (Patient) userDetails;
             return ResponseEntity
                     .ok()
-                    .body(ProfileDTO
+                    .body(ProfileResponse
                             .builder()
-                            .username(p.getPatientName())
+                            .username(p.getName())
                             .number(p.getNumber())
-                            .email(p.getPatientEmail()).profilePath(userDetails.getUserProfile()).build());
+                            .email(p.getEmail()).profile(userDetails.getProfile()).build());
 
         }
     }
