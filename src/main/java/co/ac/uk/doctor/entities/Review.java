@@ -18,6 +18,9 @@ public class Review {
     @Column(nullable = false)
     private String content;
 
+    @Column
+    private Double rating;
+
     @ManyToOne
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;

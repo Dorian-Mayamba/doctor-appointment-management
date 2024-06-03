@@ -21,5 +21,7 @@ public class PatientSerializer {
 
     private String patientProfile;
 
-    private List<AppointmentSerializer> appointmentSerializerList;
+    private List<AppointmentSerializer> appointments;
+    private List<ReviewSerializer> reviews;
+    private List<RatingSerializer> ratings;
 }

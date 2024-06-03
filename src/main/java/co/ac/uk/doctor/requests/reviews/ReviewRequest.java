@@ -9,4 +9,5 @@ import lombok.*;
 @Builder
 public class ReviewRequest {
     private String content;
+    private Double rating;
 }

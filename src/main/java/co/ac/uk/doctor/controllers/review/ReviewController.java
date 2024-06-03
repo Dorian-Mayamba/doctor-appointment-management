@@ -16,6 +16,10 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
+    @GetMapping("/reviews")
+    public ResponseEntity<List<ReviewSerializer>> getAllReviews(){
+        return reviewService.findAll();
+    }
     @GetMapping("/reviews/{doctorId}")
     public ResponseEntity<List<ReviewSerializer>> getReviews(@PathVariable("doctorId") Long doctorId) {
         return reviewService.getReviews(doctorId);

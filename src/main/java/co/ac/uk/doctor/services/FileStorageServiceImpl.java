@@ -1,7 +1,6 @@
 package co.ac.uk.doctor.services;
 
 import co.ac.uk.doctor.services.generic.FileStorageService;
-import co.ac.uk.doctor.entities.generic.IUserDetails;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -23,14 +22,13 @@ public class FileStorageServiceImpl implements FileStorageService {
     private final Path root = Paths.get("uploads");
 
     @Override
-    public void save(MultipartFile file, String filename, IUserDetails userDetails) throws IOException {
+    public void save(MultipartFile file, String filename) throws IOException {
         if(!Files.exists(root)){
             Files.createDirectories(root);
         }
 
         try(InputStream inputStream = file.getInputStream()){
             Path filePath = root.resolve(filename);
-            userDetails.setProfile(filename.toString());
             Files.copy(inputStream,filePath, StandardCopyOption.REPLACE_EXISTING);
         }catch (IOException ex){
             throw new IOException("Could not save image file: "+ filename, ex);

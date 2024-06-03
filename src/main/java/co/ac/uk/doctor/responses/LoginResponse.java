@@ -1,20 +1,17 @@
 package co.ac.uk.doctor.responses;
 
 
+import co.ac.uk.doctor.serializers.AppointmentSerializer;
+import co.ac.uk.doctor.serializers.RatingSerializer;
+import co.ac.uk.doctor.serializers.ReviewSerializer;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Data
-@Builder
-public class LoginResponse {
-    private String currentUserName;
-    private String accessToken;
-    private String email;
+import java.util.List;
 
-    private String userProfile;
-    private Long id;
-    private String roleType;
-    private String number;
+@Data
+public class LoginResponse extends AuthResponse{
+
 }

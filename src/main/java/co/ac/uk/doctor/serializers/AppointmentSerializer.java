@@ -1,5 +1,6 @@
 package co.ac.uk.doctor.serializers;
 
+import co.ac.uk.doctor.entities.Appointment;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
@@ -19,5 +20,7 @@ public class AppointmentSerializer {
     @JsonFormat(pattern = "HH:mm")
     private LocalTime endTime;
     private LocalDate date;
-    private String patientName, doctorName;
+    private Appointment.Status status;
+    private String patientName, doctorName,patientPicture,doctorPicture,patientEmail,doctorEmail;
+    private Long id;
 }

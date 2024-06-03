@@ -10,5 +10,5 @@ import lombok.*;
 @Builder
 public class ReviewResponse {
     private String message;
-    private ReviewSerializer reviewSerializer;
+    private ReviewSerializer review;
 }

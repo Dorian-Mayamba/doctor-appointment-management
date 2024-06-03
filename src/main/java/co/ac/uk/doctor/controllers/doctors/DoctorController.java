@@ -36,14 +36,8 @@ public class DoctorController {
     }
 
     @GetMapping("/doctors")
-    public ResponseEntity<?> getDoctors() {
-        List<DoctorSerializer> doctorSerializers =
-                doctorService.getUsers()
-                        .stream()
-                        .map((EntityToSerializerConverter::toDoctorSerializer))
-                        .collect(Collectors.toList());
-        return ResponseEntity
-                .ok(doctorSerializers);
+    public ResponseEntity<List<DoctorSerializer>> getDoctors() {
+        return ResponseEntity.ok(EntityToSerializerConverter.toDoctorSerializer(doctorService.getUsers()));
     }
 
     @GetMapping("/doctors/{speciality}")

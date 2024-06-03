@@ -1,7 +1,10 @@
 package co.ac.uk.doctor.entities.generic;
 
+import co.ac.uk.doctor.entities.Appointment;
 import co.ac.uk.doctor.entities.Role;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.List;
 
 public interface IUserDetails extends UserDetails {
     Long getId();

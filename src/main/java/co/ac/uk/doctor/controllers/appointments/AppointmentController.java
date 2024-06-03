@@ -4,6 +4,7 @@ import co.ac.uk.doctor.entities.Appointment;
 import co.ac.uk.doctor.entities.Doctor;
 import co.ac.uk.doctor.entities.Patient;
 import co.ac.uk.doctor.requests.UpdateAppointmentRequest;
+import co.ac.uk.doctor.responses.AppointmentBookingResponse;
 import co.ac.uk.doctor.responses.AppointmentDeleteResponse;
 import co.ac.uk.doctor.responses.AppointmentUpdateResponse;
 import co.ac.uk.doctor.services.generic.IUserDetailsService;
@@ -24,11 +25,8 @@ import java.util.List;
 
 @RestController
 public class AppointmentController {
-
     private final AppointmentService appointmentService;
-
     private final PatientService patientService;
-
     private final DoctorService doctorService;
 
     @Autowired
@@ -42,20 +40,24 @@ public class AppointmentController {
 
     @GetMapping("/appointments")
     public ResponseEntity<List<AppointmentSerializer>> getAppointment() {
-
         return ResponseEntity.ok(EntityToSerializerConverter.toAppointmentsSerializer(appointmentService.getAppointments()));
     }
 
     @PostMapping("/appointments/{doctorId}/{patientId}")
-    public ResponseEntity<String> makeAppointment(
+    public ResponseEntity<AppointmentBookingResponse> makeAppointment(
             @PathVariable("doctorId") Long doctorId,
             @PathVariable("patientId") Long patientId,
             @RequestBody AppointmentRequest request) {
         JSONObject jsonObject = new JSONObject();
         Appointment appointment = appointmentService.saveAppointment(doctorId, patientId,
                 request.getDate(), request.getTime(), request.getTitle());
-        jsonObject.put("message", String.format("Your appointment for %s at %s has been successfully scheduled", appointment.getDate(), appointment.getTime()));
-        return ResponseEntity.status(HttpStatus.CREATED).body(jsonObject.toString(jsonObject.length()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                AppointmentBookingResponse
+                        .builder()
+                        .message(String.format("Your appointment for %s at %s has been successfully scheduled", appointment.getDate(), appointment.getTime()))
+                        .appointment(EntityToSerializerConverter.toAppointmentSerializer(appointment))
+                        .build()
+        );
     }
 
     @GetMapping("/appointments/patients/{patientId}")

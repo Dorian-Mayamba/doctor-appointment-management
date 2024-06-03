@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -42,13 +43,13 @@ public class Patient extends User implements IUserDetails {
     private Role role;
 
     @OneToMany(mappedBy = "patient", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    List<Appointment> patientAppointments;
+    List<Appointment> patientAppointments = new ArrayList<>();
 
     @OneToMany(mappedBy = "patient", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    List<Rating> ratings;
+    List<Rating> ratings = new ArrayList<>();
 
     @OneToMany(mappedBy = "patient", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    private List<Review> reviews;
+    private List<Review> reviews = new ArrayList<>();
 
     @Override
     public Long getId() {

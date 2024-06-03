@@ -36,12 +36,7 @@ public class PatientController {
 
     @GetMapping("/patients")
     public ResponseEntity<List<PatientSerializer>> getPatients(){
-        List<PatientSerializer> patientSerializers =
-                patientService.getUsers()
-                        .stream()
-                        .map((EntityToSerializerConverter::toPatientSerializer))
-                        .collect(Collectors.toList());
-        return ResponseEntity.ok(patientSerializers);
+        return ResponseEntity.ok(EntityToSerializerConverter.toPatientSerializer(patientService.getUsers()));
     }
 
     @PostMapping("/patients/create")

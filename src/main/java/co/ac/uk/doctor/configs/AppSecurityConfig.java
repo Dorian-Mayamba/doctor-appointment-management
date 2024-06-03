@@ -56,6 +56,7 @@ public class AppSecurityConfig{
                         .requestMatchers("/auth/admin/**").hasAuthority("SCOPE_"+RoleConstants.ADMIN)
                         .requestMatchers("/doctors/create", "/doctors/update/**", "doctor/delete/**").hasAuthority("SCOPE_" + RoleConstants.ADMIN)
                         .requestMatchers("/patients/create", "patients/update/**", "patients/delete/**").hasAuthority("SCOPE_"+RoleConstants.ADMIN)
+                        .requestMatchers("/appointments", "/patients", "/doctors").hasAuthority("SCOPE_"+RoleConstants.ADMIN)
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .oauth2ResourceServer(jwt->jwt.jwt(Customizer.withDefaults()))

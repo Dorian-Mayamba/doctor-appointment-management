@@ -2,6 +2,7 @@ package co.ac.uk.doctor.services;
 
 import co.ac.uk.doctor.entities.Doctor;
 import co.ac.uk.doctor.entities.Patient;
+import co.ac.uk.doctor.entities.Rating;
 import co.ac.uk.doctor.entities.Review;
 import co.ac.uk.doctor.repositories.ReviewRepository;
 import co.ac.uk.doctor.requests.reviews.ReviewRequest;
@@ -19,13 +20,13 @@ import java.util.List;
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
-
     private final PatientService patientService;
-
     private final DoctorService doctorService;
 
-
-
+    public ResponseEntity<List<ReviewSerializer>> findAll() {
+        return ResponseEntity
+                .ok(EntityToSerializerConverter.toReviewSerializer(reviewRepository.findAll()));
+    }
     public ResponseEntity<List<ReviewSerializer>> getReviews(Long doctorId){
         Doctor doctor = (Doctor) doctorService.loadUserById(doctorId);
         return ResponseEntity
@@ -39,13 +40,14 @@ public class ReviewService {
                 .content(reviewRequest.getContent())
                 .patient(patient)
                 .doctor(doctor)
+                .rating(reviewRequest.getRating())
                 .build();
         reviewRepository.save(review);
         return ResponseEntity
                 .ok()
                 .body(ReviewResponse
                         .builder()
-                        .reviewSerializer(EntityToSerializerConverter.toReviewSerializer(review))
+                        .review(EntityToSerializerConverter.toReviewSerializer(review))
                         .message("Your review has been submitted")
                         .build());
     }
@@ -56,7 +58,7 @@ public class ReviewService {
         return ResponseEntity.ok()
                 .body(ReviewResponse
                         .builder()
-                        .reviewSerializer(EntityToSerializerConverter.toReviewSerializer(review))
+                        .review(EntityToSerializerConverter.toReviewSerializer(review))
                         .message("Your review has been updated")
                         .build());
     }

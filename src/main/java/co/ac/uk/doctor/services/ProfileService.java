@@ -33,6 +33,7 @@ public class ProfileService {
         JSONObject data = new JSONObject();
         if (Objects.nonNull(profileDTO.getProfile())){
             userDetails.setProfile(profileDTO.getProfile().getOriginalFilename());
+            fileStorageService.save(profileDTO.getProfile(), userDetails.getProfile());
         }
         userDetails.setEmail(profileDTO.getEmail());
         userDetails.setName(profileDTO.getUsername());
