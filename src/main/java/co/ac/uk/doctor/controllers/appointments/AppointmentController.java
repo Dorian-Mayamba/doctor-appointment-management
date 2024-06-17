@@ -2,6 +2,7 @@ package co.ac.uk.doctor.controllers.appointments;
 
 import co.ac.uk.doctor.entities.Appointment;
 import co.ac.uk.doctor.entities.Doctor;
+import co.ac.uk.doctor.entities.DoctorAppointmentsView;
 import co.ac.uk.doctor.entities.Patient;
 import co.ac.uk.doctor.requests.UpdateAppointmentRequest;
 import co.ac.uk.doctor.responses.AppointmentBookingResponse;
@@ -39,8 +40,8 @@ public class AppointmentController {
     }
 
     @GetMapping("/appointments")
-    public ResponseEntity<List<AppointmentSerializer>> getAppointment() {
-        return ResponseEntity.ok(EntityToSerializerConverter.toAppointmentsSerializer(appointmentService.getAppointments()));
+    public ResponseEntity<List<DoctorAppointmentsView>> getAppointment() {
+        return ResponseEntity.ok(appointmentService.getAppointments());
     }
 
     @PostMapping("/appointments/{doctorId}/{patientId}")
@@ -64,16 +65,13 @@ public class AppointmentController {
     public ResponseEntity<List<AppointmentSerializer>> getPatientsAppointments(@PathVariable("patientId") Long patientId) {
         Patient patient = (Patient) patientService.loadUserById(patientId);
         return ResponseEntity.ok(
-                EntityToSerializerConverter.toAppointmentsSerializer(patient.getPatientAppointments())
+                EntityToSerializerConverter.toAppointmentsSerializer(patient.getAppointments())
         );
     }
 
     @GetMapping("/appointments/doctors/{doctorId}")
     public ResponseEntity<List<AppointmentSerializer>> getDoctorAppointments(@PathVariable("doctorId") Long doctorId) {
-        Doctor doctor = (Doctor) doctorService.loadUserById(doctorId);
-        return ResponseEntity.ok(
-                EntityToSerializerConverter.toAppointmentsSerializer(doctor.getDoctorAppointments())
-        );
+        return appointmentService.getDoctorAppointments(doctorId);
     }
 
     @PutMapping("/appointments/{appointmentId}/update")

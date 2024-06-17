@@ -3,6 +3,9 @@ package co.ac.uk.doctor.entities;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -39,12 +42,18 @@ public class Appointment {
 
     @ManyToOne
     @JoinColumn(name = "patient_id")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private Patient patient;
 
     @ManyToOne
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;
 
+    @Column
+    private String patientName;
+
+    @Column
+    private String patientProfile;
 
     public static enum Status{
         PENDING, ACCEPTED,COMPLETED

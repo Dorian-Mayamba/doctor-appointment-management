@@ -2,6 +2,8 @@ package co.ac.uk.doctor.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,6 +29,14 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name = "patient_id")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private Patient patient;
+
+    @Column
+    private String patientName;
+
+    @Column
+    private String patientProfile;
+
 
 }

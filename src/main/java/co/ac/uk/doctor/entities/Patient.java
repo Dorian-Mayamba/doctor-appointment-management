@@ -42,13 +42,13 @@ public class Patient extends User implements IUserDetails {
     @JoinColumn(name = "role_id")
     private Role role;
 
-    @OneToMany(mappedBy = "patient", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    List<Appointment> patientAppointments = new ArrayList<>();
+    @OneToMany(mappedBy = "patient", fetch = FetchType.EAGER)
+    List<Appointment> appointments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "patient", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "patient", fetch = FetchType.EAGER)
     List<Rating> ratings = new ArrayList<>();
 
-    @OneToMany(mappedBy = "patient", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "patient", fetch = FetchType.EAGER)
     private List<Review> reviews = new ArrayList<>();
 
     @Override

@@ -29,6 +29,7 @@ public class ReviewService {
     }
     public ResponseEntity<List<ReviewSerializer>> getReviews(Long doctorId){
         Doctor doctor = (Doctor) doctorService.loadUserById(doctorId);
+        updateReviewRecords(doctor);
         return ResponseEntity
                 .ok()
                 .body(EntityToSerializerConverter.toReviewSerializer(doctor.getReviews()));
@@ -41,6 +42,8 @@ public class ReviewService {
                 .patient(patient)
                 .doctor(doctor)
                 .rating(reviewRequest.getRating())
+                .patientProfile(patient.getProfile())
+                .patientName(patient.getName())
                 .build();
         reviewRepository.save(review);
         return ResponseEntity
@@ -55,10 +58,13 @@ public class ReviewService {
     public ResponseEntity<ReviewResponse> updateReview(Long reviewId, ReviewRequest reviewRequest){
         Review review = reviewRepository.findById(reviewId).orElse(null);
         assert review != null : "Review cannot be null";
+        review.setContent(reviewRequest.getContent());
+        review.setRating(reviewRequest.getRating());
+        Review savedReview = reviewRepository.save(review);
         return ResponseEntity.ok()
                 .body(ReviewResponse
                         .builder()
-                        .review(EntityToSerializerConverter.toReviewSerializer(review))
+                        .review(EntityToSerializerConverter.toReviewSerializer(savedReview))
                         .message("Your review has been updated")
                         .build());
     }
@@ -69,5 +75,14 @@ public class ReviewService {
                 .ok()
                 .body(ReviewResponse.builder()
                         .message("Your review has been deleted").build());
+    }
+
+    private void updateReviewRecords(Doctor doctor){
+        for (Review review:doctor.getReviews()){
+            if(review.getPatient() == null){
+                review.setPatientProfile("default.png");
+            }
+        }
+        doctorService.saveDoctor(doctor);
     }
 }

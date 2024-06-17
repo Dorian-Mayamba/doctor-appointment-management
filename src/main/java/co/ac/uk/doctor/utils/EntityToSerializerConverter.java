@@ -3,7 +3,6 @@ package co.ac.uk.doctor.utils;
 import co.ac.uk.doctor.entities.*;
 import co.ac.uk.doctor.serializers.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,7 +17,7 @@ public class EntityToSerializerConverter {
                 .doctorSpeciality(doctor.getSpeciality())
                 .doctorNumber(doctor.getNumber())
                 .doctorProfile(doctor.getProfile())
-                .appointments(toAppointmentsSerializer(doctor.getDoctorAppointments()))
+                .appointments(toAppointmentsSerializer(doctor.getAppointments()))
                 .reviews(toReviewSerializer(doctor.getReviews()))
                 .averageRating(getAvgRating(doctor.getReviews()))
                 .build();
@@ -63,7 +62,7 @@ public class EntityToSerializerConverter {
                 .patientNumber(patient.getNumber())
                 .patientProfile(patient.getProfile())
                 .patientId(patient.getId())
-                .appointments(toAppointmentsSerializer(patient.getPatientAppointments()))
+                .appointments(toAppointmentsSerializer(patient.getAppointments()))
                 .reviews(toReviewSerializer(patient.getReviews()))
                 .build();
     }

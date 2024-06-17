@@ -37,11 +37,11 @@ public class Doctor extends User implements IUserDetails {
 
     @Column(nullable = false)
     private String number;
-    @Column(nullable = true)
+    @Column
     private String profile;
 
     @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    List<Appointment> doctorAppointments;
+    List<Appointment> appointments;
 
     @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     List<Rating> ratings;

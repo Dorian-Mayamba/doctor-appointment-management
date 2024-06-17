@@ -69,12 +69,12 @@ public class AuthService {
         response.setMessage(message);
         if (userDetails instanceof Doctor){
             Doctor doctor = (Doctor) userDetails;
-            response.setAppointments(EntityToSerializerConverter.toAppointmentsSerializer(doctor.getDoctorAppointments()));
+            response.setAppointments(EntityToSerializerConverter.toAppointmentsSerializer(doctor.getAppointments()));
             response.setRatings(EntityToSerializerConverter.toRatingSerializer(doctor.getRatings()));
             response.setReviews(EntityToSerializerConverter.toReviewSerializer(doctor.getReviews()));
         }else if(userDetails instanceof Patient){
             Patient patient = (Patient)userDetails;
-            response.setAppointments(EntityToSerializerConverter.toAppointmentsSerializer(patient.getPatientAppointments()));
+            response.setAppointments(EntityToSerializerConverter.toAppointmentsSerializer(patient.getAppointments()));
             response.setRatings(EntityToSerializerConverter.toRatingSerializer(patient.getRatings()));
             response.setReviews(EntityToSerializerConverter.toReviewSerializer(patient.getReviews()));
         }

@@ -15,4 +15,6 @@ public class EditDoctorRequest extends EditUserRequest{
     private String doctorSpeciality;
 
     private String doctorPassword;
+
+    private String doctorNumber;
 }

@@ -90,6 +90,7 @@ public class DoctorService extends AbstractUserDetailsService<Doctor> {
             doctorToEdit.setName(editDoctorRequest.getDoctorName());
             doctorToEdit.setEmail(editDoctorRequest.getDoctorEmail());
             doctorToEdit.setSpeciality(editDoctorRequest.getDoctorSpeciality());
+            doctorToEdit.setNumber(editDoctorRequest.getDoctorNumber());
             return saveDoctor(doctorToEdit);
         }
         return null;

@@ -14,3 +14,5 @@
 ## [1.0.0] - 2024-04-16 - added a review and rating feature
 ## [1.0.1] - 2024-04-19 - implemented review and rating feature and added an account deletion feature
 ## [1.0.2] - 2024-04-20 - refactored review and rating feature
+## [1.0.3] - 2024-06-04 - changed database schema
+## [1.0.4] - 2024-06-17 - changed appointment view schema
