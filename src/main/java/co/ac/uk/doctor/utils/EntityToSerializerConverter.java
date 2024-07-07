@@ -29,6 +29,22 @@ public class EntityToSerializerConverter {
                 .collect(Collectors.toList());
     }
 
+    public static SlotSerializer toSlotSerializer(Slot slot){
+        return SlotSerializer
+                .builder()
+                .id(slot.getId())
+                .time(slot.getTime())
+                .date(slot.getDate())
+                .month(slot.getMonth())
+                .isBooked(slot.isBooked()).build();
+    }
+
+    public static List<SlotSerializer> toSlotSerializer(List<Slot> slots){
+        return slots.stream()
+                .map(EntityToSerializerConverter::toSlotSerializer)
+                .collect(Collectors.toList());
+    }
+
     public static List<AppointmentSerializer> toAppointmentsSerializer(List<Appointment> appointments) {
         return appointments
                 .stream().map(EntityToSerializerConverter::toAppointmentSerializer)

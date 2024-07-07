@@ -49,6 +49,9 @@ public class Doctor extends User implements IUserDetails {
     @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     List<Review> reviews;
 
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    List<Slot> slots;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays.asList(new Role[]{

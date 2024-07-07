@@ -16,3 +16,4 @@
 ## [1.0.2] - 2024-04-20 - refactored review and rating feature
 ## [1.0.3] - 2024-06-04 - changed database schema
 ## [1.0.4] - 2024-06-17 - changed appointment view schema
+## [1.0.5] - 2024-07-07 - added a new slot management feature
